@@ -7,11 +7,11 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Hello ZRSquared!
         </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://trello.com/b/ha0hIDQw/ciseassessment1bteam-3"
           target="_blank"
           rel="noopener noreferrer"
         >
