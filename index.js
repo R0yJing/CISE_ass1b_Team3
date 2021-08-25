@@ -24,6 +24,7 @@ app.get("/", (req, res) => res.send("Hello world!"));
 console.log("env port" + process.env.PORT);
 console.log("node env " + process.env.NODE_ENV);
 
+
 let PORT;
 if (process.env.NODE_ENV === "production") {
   port = process.env.PORT;
