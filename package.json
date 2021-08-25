@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/R0yJing/CISE_ass1b_Team3/issues"
   },
-  "homepage": "https://github.com/R0yJing/CISE_ass1b_Team3#readme"
+  "homepage": "https://github.com/R0yJing/CISE_ass1b_Team3#readme",
+  "dependencies": {
+    "concurrently": "^6.2.1"
+  }
 }
