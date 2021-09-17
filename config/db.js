@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 let mongoose = require("mongoose");
 let numArticles = 0;
 const connectDB = async () => {

@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import {articles, setArticle} from "../dummydata/articles";
-let env = require("dotenv").config();
+import env from "../env";
+
 
 const SubmissionForm = () => {
   const { register, handleSubmit } = useForm();
   const [result, setResult] = useState("");
   let nextIdx =-1;
   axios
-    .get("http://localhost:5555/api/articles")
+    .get(env.env)
     .then((res) =>{nextIdx = res.data.length + 1; 
       console.log("sucess from db!")}).catch(err => console.log("error getting from db " + err));
   let onSubmit = (data) => {
@@ -31,14 +32,11 @@ const SubmissionForm = () => {
       evidence: data.evidence,
     };
     console.log(JSON.stringify(articleData));
-    console.log("PORT = " + env.PORT);
-
     axios
-      .post("http://localhost:5555/api/articles", articleData)
+      .post(env.env, articleData)
       .then((res) => {
         console.log("article posted");
-        articles.concat([articleData]);
-        nextIdx++;
+        
       })
       .catch((err) => {
         console.log("Error submitting!");
@@ -47,16 +45,7 @@ const SubmissionForm = () => {
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <button
-        onClick={() =>
-          axios.delete(
-            "http://localhost:5555/api/articles/" + 7
-          )
-        }
-      >
-        Click me
-      </button>
-
+    
       <input {...register("title")} placeholder="Title" />
       <p>
         <input {...register("authors")} placeholder="Authors" />

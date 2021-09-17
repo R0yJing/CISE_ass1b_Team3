@@ -2,32 +2,41 @@ import React, { Component } from "react";
 import Styles from "../components/tablestyle.js";
 import Table from "../components/evidencetable.js";
 import tablecolumns from "../components/tablecolumns.js";
-import articles from "../dummydata/articles";
 import axios from "axios";
 import Dropdown from "../components/Dropdown.js";
+import env from "../env";
+import SEPractices from "../dummydata/SEPractices";
+
+const optionItems = SEPractices.map((SEPractice) => (
+  <option key={SEPractice.practice}>{SEPractice.practice}</option>
+));
 
 class SEPractice extends Component {
+
     state = {
         currentArticles: [],
         allArticles: []
     }
+    //called every time this page is loaded.
     componentDidMount(){
-      axios.get('http://localhost:5555/api/articles').then(res => {
-        this.state.allArticles = res.data.articles;
-        console.log("got all articles");
-      })
+      console.log("prcess env" + env.env);
+
+      axios.get(env.env).then(res => {
+        this.setState({allArticles : res.data});
+        console.log(">>>>>>>>>>>" + this.state.allArticles.length);
+      }).catch((e)=> console.log("no articles found"));
 
       
+
     }
 
     handleChange = (e) =>{
         console.log(e.target.value);
-
-        let temp = this.state.allArticles.filter((item) => item.cat === e.target.value);
-        temp.forEach(i => console.log(i.title));
-
+       
         this.setState({
-            currentArticles: temp
+          currentArticles: this.state.allArticles.filter(
+            (item) => item.cat.toLowerCase() === e.target.value.toLowerCase()
+          ),
         });
     }
     render() {
@@ -35,15 +44,14 @@ class SEPractice extends Component {
           return (
             <div>
               
-              <Dropdown handleChange = {this.handleChange} />
+              <Dropdown title="Select an SE practice" optionItems = {optionItems}  handleChange = {this.handleChange} />
               <Styles>
                 <Table
                   data={this.state.currentArticles}
                   columns={tablecolumns}
+                  numArticles={this.state.allArticles.length}
                 />
-                <button del onClick = {() => axios.delete(
-            "http://localhost:" + 5555 + "/api/articles/dsf"
-          )} />
+                
               </Styles>
             </div>
           );
@@ -54,7 +62,7 @@ class SEPractice extends Component {
                 <h2>
                   Select SE Practice to get evidence for the claimed benefits
                 </h2>
-                <Dropdown handleChange={this.handleChange} />
+                <Dropdown title='Select an SE practice' optionItems = {optionItems} handleChange={this.handleChange} />
               </div>
             );
             

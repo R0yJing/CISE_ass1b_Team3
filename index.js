@@ -16,7 +16,7 @@ app.use(bodyParser.json({ extended: false }));
 
 app.get("/", (req, res) => {res.json(app.stack);});
 //update books via app.use
-app.use("./api/articles", articles);
+app.use("/", articles);
 const PORT = process.env.PORT;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Article = require("../../models/Article");
 
-router.get("/", async (req, res) => {
+
+router.get("/api/articles", async (req, res) => {
   Article.find()
     .then((articles) => res.json(articles))
     .catch((err) => res.status(404).json({ noArtFound: "No articles found" }));
@@ -37,6 +38,7 @@ router.delete("/api/articles/:title", async (req, res) => {
 //     else console.log("delete all successful");
 //   });
 // });
+
 
 router.post("/api/articles", async (req, res) => {
   console.log("posting new article");

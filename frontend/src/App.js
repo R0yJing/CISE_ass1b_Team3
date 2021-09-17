@@ -34,7 +34,7 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route path="/SEPractice" component={SEPractice} />
           <Route path="/SubmitArticle" component={SubmitArticle} />
-          <Route path="/api/articles" />
+       
           <Redirect to="/" />
 
         </div>

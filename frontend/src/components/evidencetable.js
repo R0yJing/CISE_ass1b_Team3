@@ -1,9 +1,12 @@
 import React, { useMemo } from "react";
-import articles from "../dummydata/articles.js";
 import { useTable, useSortBy, usePagination } from "react-table";
-import axios from "axios";
+import SEPractices from "../dummydata/SEPractices";
+import Dropdown from '../components/Dropdown';
 
-const Table = ({ columns, data }) => {
+
+const Table = ({ columns, data, numArticles }) => {
+
+  
   const {
     getTableProps,
     getTableBodyProps,
@@ -25,11 +28,19 @@ const Table = ({ columns, data }) => {
     {
       columns,
       data,
-      initialState: { pageIndex: 0 },
+      initialState: { pageIndex: 0, pageSize: 3 },
     },
     useSortBy,
     usePagination
   );
+  console.log("pCount =" + numArticles + ", " + "pageSize" + pageSize);
+  let pageRange = [...Array(Math.ceil(numArticles / pageSize) - 1).keys()].map((num) => (
+    <option key={num + 1}>{num + 1}</option>
+  ));
+  
+    console.log(pageRange.toString());
+    console.log(Math.ceil(pageCount / pageSize) - 1);
+    console.log("pCount =" + pageCount + ", " + "pageSize"+ pageSize)
   return (
     <>
       <table {...getTableProps()}>
@@ -91,7 +102,18 @@ const Table = ({ columns, data }) => {
           </strong>{" "}
         </span>
         <span>
-          | Go to page:{" "}
+          | Go to page:{"--"}
+          <Dropdown 
+              title="Choose a page number"
+              optionItems={pageRange} 
+              handleChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+              
+            }}
+          />
+        </span>
+        <span>
           <input
             type="number"
             defaultValue={pageIndex + 1}
@@ -101,11 +123,12 @@ const Table = ({ columns, data }) => {
             }}
             style={{ width: "100px" }}
           />
-        </span>{" "}
+        </span>
         <select
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
+
           }}
         >
           {[3, 7, 15].map((pageSize) => (
@@ -113,6 +136,7 @@ const Table = ({ columns, data }) => {
               Show {pageSize}
             </option>
           ))}
+          
         </select>
       </div>
     </>
