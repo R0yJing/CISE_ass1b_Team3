@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Article = require("../../models/Article");
+import axios from 'axios';
+let mongoose = require("mongoose");
 
-
+// require('../../dotenv').config();
 router.get("/api/articles", async (req, res) => {
   Article.find()
     .then((articles) => res.json(articles))
@@ -19,6 +21,16 @@ router.get("/api/articles", async (req, res) => {
 //   });
 // });
 
+router.delete("/api/articles", async (req, res) => {
+  let numArticles = -1;
+  mongoose.connection.db.dropCollection(process.env.API_URL).then(() => {console.log("dropped")});
+
+  // axios.get(process.env.API_URL).then(res => numArticles = res.data.length ).catch(e =>{console.log(e.response); return;});
+
+  // for (let i = 0; i < numArticles; i++){
+  //   axios.delete((process.env.API_URL +"/" + i)).then();
+  // }
+})
 //findOneAndDelete({ _id: id}) = findByIdAndDelete(id)
 router.delete("/api/articles/:title", async (req, res) => {
   Article.remove({title : req.params.title}, (err) => {

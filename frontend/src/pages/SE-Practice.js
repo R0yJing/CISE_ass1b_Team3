@@ -11,31 +11,29 @@ const optionItems = SEPractices.map((SEPractice) => (
   <option key={SEPractice.practice}>{SEPractice.practice}</option>
 ));
 
+//this is the SE table page
 class SEPractice extends Component {
 
     state = {
+        //current articles filtered by se practice
         currentArticles: [],
+        //all articles in db
         allArticles: []
     }
     //called every time this page is loaded.
     componentDidMount(){
-      console.log("prcess env" + env.env);
-
-      axios.get(env.env).then(res => {
+      axios.get(env.url).then(res => {
         this.setState({allArticles : res.data});
-        console.log(">>>>>>>>>>>" + this.state.allArticles.length);
       }).catch((e)=> console.log("no articles found"));
-
-      
-
     }
 
     handleChange = (e) =>{
         console.log(e.target.value);
-       
+        //set state will automatically render the whole page
         this.setState({
           currentArticles: this.state.allArticles.filter(
-            (item) => item.cat.toLowerCase() === e.target.value.toLowerCase()
+            (item) => item.cat.toLowerCase() === 
+            e.target.value.toLowerCase()
           ),
         });
     }

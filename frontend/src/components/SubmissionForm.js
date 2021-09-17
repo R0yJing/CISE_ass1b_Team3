@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import {articles, setArticle} from "../dummydata/articles";
@@ -7,18 +7,28 @@ import env from "../env";
 
 const SubmissionForm = () => {
   const { register, handleSubmit } = useForm();
-  const [result, setResult] = useState("");
-  let nextIdx =-1;
-  axios
-    .get(env.env)
-    .then((res) =>{nextIdx = res.data.length + 1; 
-      console.log("sucess from db!")}).catch(err => console.log("error getting from db " + err));
-  let onSubmit = (data) => {
-    //axios.delete("http://localhost:5555/api/articles").then((res) => console.log("all deleted"));
-    // for (let i = 0; i < 10; i++){
-    //   axios.delete("http://localhost:5555/api/articles/" + i).then((res)=>console.log("deleted " + i));
-    // }
-    
+  const [nextIdx, setResult] = useState("");
+
+  //use memo will be called on first page load,
+  //if you haven't left the page and entered it again,
+  //this won't be triggered
+  //purpose: get the number of articles in db
+  useMemo( ()=>{
+
+    axios
+      .get(env.url)
+      .then((res) => {
+        setResult(res.data.length + 1);
+        console.log("first render!")
+      })
+      .catch((e) => console.log("error getting from db"))
+      
+    },
+    []
+  );
+
+
+    let onSubmit = (data) => {
     
     const articleData = {
       _id: nextIdx,
@@ -31,12 +41,14 @@ const SubmissionForm = () => {
       claim: data.claim,
       evidence: data.evidence,
     };
-    console.log(JSON.stringify(articleData));
+    //posting to db
     axios
-      .post(env.env, articleData)
+      .post(env.url, articleData)
       .then((res) => {
-        console.log("article posted");
-        
+        alert("article posted");
+        //update the next article index
+        setResult(Number(nextIdx) + 1);
+        console.log("next idx" + nextIdx);
       })
       .catch((err) => {
         console.log("Error submitting!");
@@ -64,7 +76,7 @@ const SubmissionForm = () => {
         <option value="TDD"> TDD</option>
         <option value="Mob Programming"> Mob Programming</option>
       </select>
-      <p>{result}</p>
+    
       <input type="submit" />
     </form>
   );

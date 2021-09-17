@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
 import { useTable, useSortBy, usePagination } from "react-table";
-import SEPractices from "../dummydata/SEPractices";
 import Dropdown from '../components/Dropdown';
-
+import styles from '../samerow.module.css';
 
 const Table = ({ columns, data, numArticles }) => {
 
@@ -28,11 +27,13 @@ const Table = ({ columns, data, numArticles }) => {
     {
       columns,
       data,
+      //initially the first page is displayed, displaying 3 rows
       initialState: { pageIndex: 0, pageSize: 3 },
     },
     useSortBy,
     usePagination
   );
+  
   console.log("pCount =" + numArticles + ", " + "pageSize" + pageSize);
   let pageRange = [...Array(Math.ceil(numArticles / pageSize) - 1).keys()].map((num) => (
     <option key={num + 1}>{num + 1}</option>
@@ -101,29 +102,31 @@ const Table = ({ columns, data, numArticles }) => {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
-        <span>
-          | Go to page:{"--"}
-          <Dropdown 
-              title="Choose a page number"
-              optionItems={pageRange} 
-              handleChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-              
-            }}
-          />
-        </span>
-        <span>
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>
+        <div className={styles.page_selection} >
+         
+             Go to page:  
+            <Dropdown 
+
+                title="Choose a page number"
+                optionItems={pageRange} 
+                handleChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                gotoPage(page);
+                
+              }}
+            />
+                
+            <input
+              type="number"
+              defaultValue={pageIndex + 1}
+              onChange={(e) => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                gotoPage(page);
+              }}
+              style={{ width: "100px" }}
+            />
+         
+        </div>
         <select
           value={pageSize}
           onChange={(e) => {
@@ -131,6 +134,7 @@ const Table = ({ columns, data, numArticles }) => {
 
           }}
         >
+        
           {[3, 7, 15].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
