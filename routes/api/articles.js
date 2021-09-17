@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Article = require("../../models/Article");
-import axios from 'axios';
+
 let mongoose = require("mongoose");
 
 // require('../../dotenv').config();
