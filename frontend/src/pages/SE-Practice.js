@@ -16,26 +16,37 @@ class SEPractice extends Component {
 
     state = {
         //current articles filtered by se practice
-        currentArticles: [],
+        currentArticles:[],
         //all articles in db
-        allArticles: []
+        allArticles:[]
     }
     //called every time this page is loaded.
     componentDidMount(){
+      
+
       axios.get(env.url).then(res => {
+        console.log(res.data);
         this.setState({allArticles : res.data});
+        console.log(this.state.allArticles);
+        
+        console.warn("got all arts");
       }).catch((e)=> console.log("no articles found"));
     }
 
     handleChange = (e) =>{
         console.log(e.target.value);
-        //set state will automatically render the whole page
-        this.setState({
-          currentArticles: this.state.allArticles.filter(
-            (item) => item.cat.toLowerCase() === 
-            e.target.value.toLowerCase()
-          ),
-        });
+          this.state.allArticles.forEach(item => {if (item["cat"].toLowerCase() === e.target.value.toLowerCase()) console.log("yes")});
+    let temp =  this.state.allArticles.filter(
+       (item) => item["cat"].toLowerCase() === e.target.value.toLowerCase()
+     );
+     console.log("temp" + temp);
+     console.log(temp)
+   //set state will automatically render the whole page
+   this.setState({
+     currentArticles : temp
+   });
+        console.log("current arts " + this.state.currentArticles);
+
     }
     render() {
         if (this.state.currentArticles.length !== 0)

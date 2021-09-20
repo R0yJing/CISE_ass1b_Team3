@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 const ArticleSchema = new mongoose.Schema({
-  _id: {
-    type: String,
-    required: true,
-  },
+  
   cat: {
     type: String,
   },
@@ -30,4 +27,4 @@ const ArticleSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("article", ArticleSchema);
+module.exports = Article = mongoose.model("article", ArticleSchema);

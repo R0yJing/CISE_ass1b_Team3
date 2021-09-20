@@ -2,9 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Article = require("../../models/Article");
 
-let mongoose = require("mongoose");
-
-// require('../../dotenv').config();
 router.get("/api/articles", async (req, res) => {
   Article.find()
     .then((articles) => res.json(articles))
@@ -22,26 +19,22 @@ router.get("/api/articles", async (req, res) => {
 // });
 
 router.delete("/api/articles", async (req, res) => {
-  let numArticles = -1;
-  mongoose.connection.db.dropCollection(process.env.API_URL).then(() => {console.log("dropped")});
-
-  // axios.get(process.env.API_URL).then(res => numArticles = res.data.length ).catch(e =>{console.log(e.response); return;});
-
-  // for (let i = 0; i < numArticles; i++){
-  //   axios.delete((process.env.API_URL +"/" + i)).then();
-  // }
+ 
+  Article.deleteMany({})
+    .then(res.send("deletions successful"))
+    .catch((error) => console.log(error));
 })
 //findOneAndDelete({ _id: id}) = findByIdAndDelete(id)
-router.delete("/api/articles/:title", async (req, res) => {
-  Article.remove({title : req.params.title}, (err) => {
+router.delete("/api/articles/:id", async (req, res) => {
+ 
+  Article.remove({ id : req.body.id}, ( err) => {
     if (err)
       res.json({ msg: "unsucessful delete by title = " + req.params.title });
-    else res.json({ msg: "deleted " + art });
+    else res.json({ msg: "deleted " + title });
 
   })
   // Article.findOneAndDelete({title: req.params.title}, (err, art) =>{
     
-  // });
 });
 
 // router.delete("/", async (req, res) => {
@@ -55,7 +48,7 @@ router.delete("/api/articles/:title", async (req, res) => {
 router.post("/api/articles", async (req, res) => {
   console.log("posting new article");
   Article.create(req.body)
-    .then((article) => res.send("posted!"))
+    .then((article) => {console.log("posted"); res.send("posted!")})
     .catch((err) =>{      
       res.status(400).json({ error: "Unable to add this article" });
       console.log(err);

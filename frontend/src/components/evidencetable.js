@@ -4,7 +4,6 @@ import Dropdown from '../components/Dropdown';
 import styles from '../samerow.module.css';
 
 const Table = ({ columns, data, numArticles }) => {
-
   
   const {
     getTableProps,
@@ -25,8 +24,23 @@ const Table = ({ columns, data, numArticles }) => {
     state: { pageIndex, pageSize },
   } = useTable(
     {
+    
+      sortTypes: {
+                alphanumeric: (row1, row2, columnName) => {
+                    const rowOneColumn = row1.values[columnName];
+                    const rowTwoColumn = row2.values[columnName];
+                    if (isNaN(rowOneColumn)) {
+                        return rowOneColumn.toUpperCase() >
+                            rowTwoColumn.toUpperCase()
+                            ? 1
+                            : -1;
+                    }
+                    return Number(rowOneColumn) > Number(rowTwoColumn) ? 1 : -1;
+                }
+            },
       columns,
       data,
+    
       //initially the first page is displayed, displaying 3 rows
       initialState: { pageIndex: 0, pageSize: 3 },
     },
@@ -35,9 +49,9 @@ const Table = ({ columns, data, numArticles }) => {
   );
   
   console.log("pCount =" + numArticles + ", " + "pageSize" + pageSize);
-  let pageRange = [...Array(Math.ceil(numArticles / pageSize) - 1).keys()].map((num) => (
-    <option key={num + 1}>{num + 1}</option>
-  ));
+  console.log()
+  let pageRange =
+    [...Array(pageCount + 1).keys()].slice(1).map((num) => <option key={num}>{num}</option>);
   
     console.log(pageRange.toString());
     console.log(Math.ceil(pageCount / pageSize) - 1);
@@ -55,13 +69,18 @@ const Table = ({ columns, data, numArticles }) => {
                   {column.render("Header")}
                   {/* Add a sort direction indicator */}
                   <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        " 🔽"
+                      ) : (
+                        " 🔼"
+                      )
+                    ) : (
+                      <span style={{ opacity: 0.3 }}> ⇅ </span>
+                    )}
                   </span>
                 </th>
+
               ))}
             </tr>
           ))}
@@ -102,45 +121,37 @@ const Table = ({ columns, data, numArticles }) => {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
-        <div className={styles.page_selection} >
-         
-             Go to page:  
-            <Dropdown 
-
-                title="Choose a page number"
-                optionItems={pageRange} 
-                handleChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                gotoPage(page);
-                
-              }}
-            />
-                
-            <input
-              type="number"
-              defaultValue={pageIndex + 1}
-              onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                gotoPage(page);
-              }}
-              style={{ width: "100px" }}
-            />
-         
+        <div className={styles.page_selection}>
+          Go to page:
+          <Dropdown
+            title="Choose a page number"
+            optionItems={pageRange}
+            handleChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+          />
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0;
+              gotoPage(page);
+            }}
+            style={{ width: "100px" }}
+          />
         </div>
         <select
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
-
           }}
         >
-        
           {[3, 7, 15].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
           ))}
-          
         </select>
       </div>
     </>

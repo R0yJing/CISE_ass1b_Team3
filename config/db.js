@@ -1,5 +1,6 @@
-let mongoose = require("mongoose");
-let numArticles = 0;
+let mongoose = require('mongoose');
+
+let db;
 const connectDB = async () => {
     console.log("connecting to " + process.env.MONGODB_CONNECTION_STRING);
   
@@ -7,12 +8,10 @@ const connectDB = async () => {
     .connect(process.env.MONGODB_CONNECTION_STRING, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    })
-    .then(() => {
-      console.log("MongoDB connected");
-    })
-    .catch((err) => console.log(err));
+    });
+  }
+db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-};
+module.exports = {db, connectDB};
 
-module.exports = connectDB;
