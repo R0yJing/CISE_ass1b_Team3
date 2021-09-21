@@ -21,13 +21,12 @@ const SubmissionForm = () => {
       console.log("list str = "+ listStr["title"]);
       console.log(listStr);
 
-     if(!(regexDoi.test(listStr["doi"])))
-     {
-      console.log("Doi problem");
+     if (listStr["doi"].length === 0) {
+       console.log("Doi problem");
      }
-     if(!(regexYear.test(listStr["pubyear"])))
+     if(isNaN(listStr["pubyear"]) && listStr["pubyear"].length === 4)
      {
-      console.log("Pub Year Problem problem");
+      console.log("Pub Year problem");
      }
      if((document.getElementById("sePractice") === ""))
      {
@@ -41,21 +40,22 @@ const SubmissionForm = () => {
      {
       console.log("Claim problem");
      }
-     if((regexName.test(listStr["authors"])))
+     if(listStr["authors"] === "")
      {
       console.log("Author problem");
      }
 
-      if (!(regexDoi.test(listStr["doi"]))
-        || !(regexYear.test(listStr["pubyear"]))
+      if (listStr["doi"].length === ""
+        || isNaN(listStr["pubyear"])
+        || listStr["pubyear"].length !== 4
         || (document.getElementById("sePractice") === "")
         || listStr["title"] === ""
         || listStr["claim"] === ""
-        || !(regexName.test(listStr["authors"])))
+        || listStr["authors"] === "")
       {
         alert("Invalid entries detected");
         return false;
-      }
+      } else return true;
       
     }
     console.log("cat " + document.getElementById("sePractice"));
