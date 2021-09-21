@@ -4,7 +4,6 @@ import axios from "axios";
 import {articles, setArticle} from "../dummydata/articles";
 import env from "../env";
 
-
 const SubmissionForm = () => {
   const { register, handleSubmit } = useForm();
   const [result, setResult] = useState("");
@@ -12,12 +11,62 @@ const SubmissionForm = () => {
   //if you haven't left the page and entered it again,
   //this won't be triggered
   //purpose: get the number of articles in db
-   
+    
+  let checkEntries = (listStr) => {
+      
+      var regexDoi = RegExp('/^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i'); //Checks to see if it's in the DOI Format
+      var regexYear = RegExp('^(?:19|20)\d{2}$') //Checks to see if it is a year between 1900 and 2099
+    
+      var regexName = RegExp("^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$"); //Not a perfect name checker, but better then nothing.
+      console.log("list str = "+ listStr["title"]);
+      console.log(listStr);
+
+     if(!(regexDoi.test(listStr["doi"])))
+     {
+      console.log("Doi problem");
+     }
+     if(!(regexYear.test(listStr["pubyear"])))
+     {
+      console.log("Pub Year Problem problem");
+     }
+     if((document.getElementById("sePractice") === ""))
+     {
+      console.log("se practice is wrong");
+     }
+     if(listStr["title"] === "")
+     {
+      console.log("Title problem");
+     }
+     if(listStr["claim"] === "")
+     {
+      console.log("Claim problem");
+     }
+     if((regexName.test(listStr["authors"])))
+     {
+      console.log("Author problem");
+     }
+
+      if (!(regexDoi.test(listStr["doi"]))
+        || !(regexYear.test(listStr["pubyear"]))
+        || (document.getElementById("sePractice") === "")
+        || listStr["title"] === ""
+        || listStr["claim"] === ""
+        || !(regexName.test(listStr["authors"])))
+      {
+        alert("Invalid entries detected");
+        return false;
+      }
+      
+    }
+    console.log("cat " + document.getElementById("sePractice"));
     const onSubmit = (data) => {
+
+      if (!checkEntries(data)){
+        return;
+      } else alert("success!");
+      
       const articleData = {
-        //idx is decided by the db, not here.
-        //_id: nextIdx,
-        cat: document.getElementById("sePractice").value,
+        cat: "TDD",
         title: data["title"],
         authors: data["authors"],
         source: data["source"],
@@ -26,14 +75,8 @@ const SubmissionForm = () => {
         claim: data["claim"],
         evidence: data["evidence"],
       };
-      alert("submitting " + Object.values(data));
-
+    
       console.log("title " + data.title);
-      
-      Object.values(data).every(value => {
-        if (value === "") return false;
-        return true;
-      });
       
       axios
         .post(env.url, articleData)
@@ -53,7 +96,7 @@ const SubmissionForm = () => {
   };
   const fieldStrings = ["title", "authors", "source", "pubyear", "doi"];
   function highlightIfErroneous(e, idx){
-  
+    
     if (e.target.value === ""){
         document.getElementById(idx).style.backgroundColor="red"
         
@@ -78,10 +121,12 @@ const SubmissionForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       {fields}
       <select 
+        defaultValue={""}
        id="sePractice" {...register("sepractice")}>
         <option value="">Select SE practice...</option>
         <option value="TDD"> TDD</option>
         <option value="Mob Programming"> Mob Programming</option>
+        
       </select>
     
       <input type="submit" />
