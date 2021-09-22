@@ -3,6 +3,19 @@ import { useTable, useSortBy, usePagination } from "react-table";
 import Dropdown from '../components/Dropdown';
 import styles from '../samerow.module.css';
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef()
+    const resolvedRef = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return <input type="checkbox" ref={resolvedRef} {...rest} />
+  }
+)
+
 const Table = ({ columns, data, numArticles }) => {
   
   const {
@@ -21,6 +34,8 @@ const Table = ({ columns, data, numArticles }) => {
     nextPage,
     previousPage,
     setPageSize,
+    allColumns,
+    getToggleHideAllColumnsProps,
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -153,6 +168,22 @@ const Table = ({ columns, data, numArticles }) => {
             </option>
           ))}
         </select>
+      </div>
+      
+      <h3>
+          Column Hiding Options
+      </h3>
+      
+      <div style={{flex:2,flexDirection:"row",justifyContent:'space-between',padding:'1700'}}>
+        {allColumns.map((column) => (
+          <div key={column.id}>
+            <label>
+              <input type="checkbox" {...column.getToggleHiddenProps()} />{" "}
+              {column.id}
+            </label>
+          </div>
+        ))}
+        <br />
       </div>
     </>
   );
