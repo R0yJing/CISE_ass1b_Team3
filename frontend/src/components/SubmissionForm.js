@@ -11,7 +11,6 @@ const SubmissionForm = () => {
   //if you haven't left the page and entered it again,
   //this won't be triggered
   //purpose: get the number of articles in db
-    
   let checkEntries = (listStr) => {
       
       var regexDoi = RegExp('/^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i'); //Checks to see if it's in the DOI Format
@@ -48,7 +47,7 @@ const SubmissionForm = () => {
       if (listStr["doi"].length === ""
         || isNaN(listStr["pubyear"])
         || listStr["pubyear"].length !== 4
-        || (document.getElementById("sePractice") === "")
+        || (document.getElementById("sePractice").value === "")
         || listStr["title"] === ""
         || listStr["claim"] === ""
         || listStr["authors"] === "")
@@ -64,16 +63,17 @@ const SubmissionForm = () => {
       if (!checkEntries(data)){
         return;
       } else alert("success!");
-      
+
+      var placeholder = "None"
       const articleData = {
-        cat: "TDD",
+        cat: document.getElementById("sePractice").value,
         title: data["title"],
         authors: data["authors"],
         source: data["source"],
         pubyear: data["pubyear"],
         doi: data["doi"],
-        claim: data["claim"],
-        evidence: data["evidence"],
+        claim: placeholder,
+        evidence: placeholder,
       };
     
       console.log("title " + data.title);
@@ -81,11 +81,7 @@ const SubmissionForm = () => {
       axios
         .post(env.url, articleData)
         .then((res) => {
-          alert("article posted");
-        // res.send({posted: 'posted'});
-          res.status(0);
-
-
+       
         })
         .catch((err) => {
           console.log("Error submitting!");
@@ -120,12 +116,12 @@ const SubmissionForm = () => {
     
     <form onSubmit={handleSubmit(onSubmit)}>
       {fields}
-      <select 
-        defaultValue={""}
+      <select
+      required
+       
        id="sePractice" {...register("sepractice")}>
-        <option value="">Select SE practice...</option>
-        <option value="TDD"> TDD</option>
-        <option value="Mob Programming"> Mob Programming</option>
+         <option value=""> Select an SE practice </option>
+        {["TDD", "Mob Programming"].map(value => <option value={value}>{value}</option> )}
         
       </select>
     
