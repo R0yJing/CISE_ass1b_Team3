@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
+      - Releases
 
 jobs:
   build:
@@ -16,4 +16,4 @@ jobs:
           heroku_app_name: "zrsquared" #Must be unique in Heroku
           heroku_email: "fxc1158@aut.ac.nz"
           appdir: "frontend" # we only want to serve the frontend for now...
-  
+

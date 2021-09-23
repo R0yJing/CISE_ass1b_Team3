@@ -10,6 +10,13 @@ require("dotenv").config();
 require("./models/Article");
 require("./routes/api/articles.js");
 connectDB();
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.resolve(__dirname, "./frontend/build")));
+
+  app.get("*", function (request, response) {
+    response.sendFile(path.join(__dirname + "/frontend/build/index.html"));
+  });
+} else console.log("development version " + process.env.NODE_ENV);
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json({ extended: false }));
