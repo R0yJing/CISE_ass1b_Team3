@@ -30,10 +30,12 @@ const Table = ({ columns, data, numArticles }) => {
                     const rowOneColumn = row1.values[columnName];
                     const rowTwoColumn = row2.values[columnName];
                     if (isNaN(rowOneColumn)) {
-                        return rowOneColumn.toUpperCase() >
-                            rowTwoColumn.toUpperCase()
-                            ? 1
-                            : -1;
+                        if (rowOneColumn === null ||
+                           rowTwoColumn === null) return -1;
+                        // return rowOneColumn.toUpperCase() >
+                        //     rowTwoColumn.toUpperCase()
+                        //     ? 1
+                        //     : -1;
                     }
                     return Number(rowOneColumn) > Number(rowTwoColumn) ? 1 : -1;
                 }
