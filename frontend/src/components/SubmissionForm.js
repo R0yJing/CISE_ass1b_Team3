@@ -121,7 +121,7 @@ const SubmissionForm = () => {
        
        id="sePractice" {...register("sepractice")}>
          <option value=""> Select an SE practice </option>
-        {["TDD", "Mob Programming"].map(value => <option value={value}>{value}</option> )}
+        {["TDD", "Mob Programming"].map((value, idx) => <option key={idx} value={value}>{value}</option> )}
         
       </select>
     

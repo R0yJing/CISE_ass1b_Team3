@@ -10,6 +10,13 @@ require("dotenv").config();
 require("./models/Article");
 require("./routes/api/articles.js");
 connectDB();
+
+app.use(cors({ origin: true, credentials: true }));
+app.use(bodyParser.json({ extended: false }));
+
+app.get("/", (req, res) => {res.json(app.stack);});
+//update books via app.use
+app.use("/", articles);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve(__dirname, "./frontend/build")));
 
@@ -18,12 +25,6 @@ if (process.env.NODE_ENV === "production") {
   });
 } else console.log("development version " + process.env.NODE_ENV);
 
-app.use(cors({ origin: true, credentials: true }));
-app.use(bodyParser.json({ extended: false }));
-
-app.get("/", (req, res) => {res.json(app.stack);});
-//update books via app.use
-app.use("/", articles);
 const PORT = process.env.PORT;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

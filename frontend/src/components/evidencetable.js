@@ -30,12 +30,15 @@ const Table = ({ columns, data, numArticles }) => {
                     const rowOneColumn = row1.values[columnName];
                     const rowTwoColumn = row2.values[columnName];
                     if (isNaN(rowOneColumn)) {
-                        if (rowOneColumn === null ||
-                           rowTwoColumn === null) return -1;
-                        // return rowOneColumn.toUpperCase() >
-                        //     rowTwoColumn.toUpperCase()
-                        //     ? 1
-                        //     : -1;
+                        if (rowOneColumn === null)
+                          return -1;
+                        else if (rowTwoColumn === null) return 1;
+
+                        else
+                          return rowOneColumn.toUpperCase() >
+                              rowTwoColumn.toUpperCase()
+                              ? 1
+                              : -1;
                     }
                     return Number(rowOneColumn) > Number(rowTwoColumn) ? 1 : -1;
                 }
@@ -55,9 +58,6 @@ const Table = ({ columns, data, numArticles }) => {
   let pageRange =
     [...Array(pageCount + 1).keys()].slice(1).map((num) => <option key={num}>{num}</option>);
   
-    console.log(pageRange.toString());
-    console.log(Math.ceil(pageCount / pageSize) - 1);
-    console.log("pCount =" + pageCount + ", " + "pageSize"+ pageSize)
   return (
     <>
       <table {...getTableProps()}>
