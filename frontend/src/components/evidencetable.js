@@ -16,6 +16,9 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
+let startsWithNum = (str) =>{
+  return /^\d/.test(str);
+}
 const Table = ({ columns, data, numArticles }) => {
   
   const {
@@ -39,23 +42,38 @@ const Table = ({ columns, data, numArticles }) => {
     state: { pageIndex, pageSize },
   } = useTable(
     {
-    
       sortTypes: {
-                alphanumeric: (row1, row2, columnName) => {
-                    const rowOneColumn = row1.values[columnName];
-                    const rowTwoColumn = row2.values[columnName];
-                    if (isNaN(rowOneColumn)) {
-                        return rowOneColumn.toUpperCase() >
-                            rowTwoColumn.toUpperCase()
-                            ? 1
-                            : -1;
-                    }
-                    return Number(rowOneColumn) > Number(rowTwoColumn) ? 1 : -1;
-                }
-            },
+        alphanumeric: (row1, row2, columnName) => {
+          console.log("sorting");
+        
+          const rowOneColumn = row1.values[columnName];
+          const rowTwoColumn = row2.values[columnName];
+          if (rowOneColumn === null){
+            if (rowTwoColumn === null){
+              return -1;
+            } else{
+              return -1;
+            }
+          } else if (rowTwoColumn === null){
+            
+            return 1;
+          }
+          if (startsWithNum(rowOneColumn) && startsWithNum(rowTwoColumn)) {
+            
+            const startingNum1 = Number(rowOneColumn.match(/\d+/)[0]);
+            const startingNum2 = Number(rowTwoColumn.match(/\d+/)[0]);
+            return startingNum1 > startingNum2 ? 1 : -1;//(startingNum1 === startingNum2 ? 0 : -1);
+          } else if (isNaN(rowOneColumn)) {
+           
+            return rowOneColumn.toLowerCase() > rowTwoColumn.toLowerCase()
+              ? 1
+              : -1;
+          }
+        },
+      },
       columns,
       data,
-    
+
       //initially the first page is displayed, displaying 3 rows
       initialState: { pageIndex: 0, pageSize: 3 },
     },
@@ -63,14 +81,10 @@ const Table = ({ columns, data, numArticles }) => {
     usePagination
   );
   
-  console.log("pCount =" + numArticles + ", " + "pageSize" + pageSize);
-  console.log()
+ 
   let pageRange =
     [...Array(pageCount + 1).keys()].slice(1).map((num) => <option key={num}>{num}</option>);
   
-    console.log(pageRange.toString());
-    console.log(Math.ceil(pageCount / pageSize) - 1);
-    console.log("pCount =" + pageCount + ", " + "pageSize"+ pageSize)
   return (
     <>
       <table {...getTableProps()}>

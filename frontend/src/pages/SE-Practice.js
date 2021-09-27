@@ -23,7 +23,7 @@ class SEPractice extends Component {
     //called every time this page is loaded.
     componentDidMount(){
       
-
+      
       axios.get(env.url).then(res => {
         console.log(res.data);
         this.setState({allArticles : res.data});
