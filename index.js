@@ -16,7 +16,7 @@ app.use(bodyParser.json({ extended: false }));
 
 app.get("/", (req, res) => {res.json(app.stack);});
 //update books via app.use
-app.use("/", articles);
+app.use("/api/articles", articles);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve(__dirname, "./frontend/build")));
 

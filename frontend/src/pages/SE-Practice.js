@@ -23,14 +23,17 @@ class SEPractice extends Component {
     //called every time this page is loaded.
     componentDidMount(){
       
+      console.log("heroku @" + env.herokuUrl);
+      axios
+        .get(env.herokuUrl)
+        .then((res) => {
+          console.log(res.data);
+          this.setState({ allArticles: res.data });
+          console.log(this.state.allArticles);
 
-      axios.get(env.url).then(res => {
-        console.log(res.data);
-        this.setState({allArticles : res.data});
-        console.log(this.state.allArticles);
-        
-        console.warn("got all arts");
-      }).catch((e)=> console.log("no articles found"));
+          console.warn("got all arts");
+        })
+        .catch((e) => console.log("no articles found"));
     }
 
     handleChange = (e) =>{

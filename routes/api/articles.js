@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Article = require("../../models/Article");
 
-router.get("/api/articles", async (req, res) => {
+router.get("/", async (req, res) => {
   Article.find()
     .then((articles) => res.json(articles))
     .catch((err) => res.status(404).json({ noArtFound: "No articles found" }));
@@ -18,14 +18,14 @@ router.get("/api/articles", async (req, res) => {
 //   });
 // });
 
-router.delete("/api/articles", async (req, res) => {
+router.delete("/", async (req, res) => {
  
   Article.deleteMany({})
     .then(res.send("deletions successful"))
     .catch((error) => console.log(error));
 })
 //findOneAndDelete({ _id: id}) = findByIdAndDelete(id)
-router.delete("/api/articles/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
  
   Article.remove({ id : req.body.id}, ( err) => {
     if (err)
@@ -45,7 +45,7 @@ router.delete("/api/articles/:id", async (req, res) => {
 // });
 
 
-router.post("/api/articles", async (req, res) => {
+router.post("/", async (req, res) => {
   console.log("posting new article");
   Article.create(req.body)
     .then((article) => {console.log("posted"); res.send("posted!")})
