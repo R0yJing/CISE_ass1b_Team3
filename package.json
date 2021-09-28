@@ -11,7 +11,8 @@
     "install-client": "cd frontend && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
     "develop": "concurrently --kill-others-on-fail \"npm run app\" \"npm run start --prefix frontend\"",
-    "start": "concurrently --kill-others-on-fail \"npm run app\" \"npm run start --prefix frontend\""
+    "start": "concurrently --kill-others-on-fail \"npm run app\" \"npm run start --prefix frontend\"",
+    "web-start": "concurrently --kill-others-on-fail \"npm run start --prefix frontend\""
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "express": "^4.17.1",
     "mongoose": "^5.13.9",
     "mongoose-sequence": "^5.3.1",
+    "path": "^0.12.7",
     "postman": "^0.2.0"
   },
   "devDependencies": {

@@ -6,17 +6,17 @@ const articles = require("./routes/api/articles");
 const bodyParser = require("body-parser");
 
 var allowCrossDomain = function (req, res, next){
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
   res.header(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, Content-Length, X-Requested-With, Accept, Origin"
+    "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json"
   );
-  //res.header("Access-Control-Allow-Origin", '*');
-  res.header("Access-Control-Allow-Credentials", 'true');
-
-
+  next();
   // intercept OPTIONS method
   if ("OPTIONS" == req.method) {
+    console.log("options req detected (preflight)");
     res.send(200);
   } else {
     next();
@@ -26,16 +26,16 @@ require("dotenv").config();
 //maybe not
 require("./models/Article");
 require("./routes/api/articles.js");
+//app.use(allowCrossDomain);
+
 connectDB();
 
-  app.use(allowCrossDomain);
   app.use(express.json({ extended: false }));
-  //app.use(cors({ origin: 'http://localhost:3000', credentials: true, optionsSuccessStatus:200 }));
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true, optionsSuccessStatus:200 }));
 
   app.use("/", articles);
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-  app.use(express.static)
   if (process.env.NODE_ENV === "production") {
     console.log("production version " + process.env.NODE_ENV);
     app.use(express.static(path.resolve(__dirname, "./frontend/build")));
