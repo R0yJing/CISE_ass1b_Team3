@@ -31,7 +31,7 @@ require("./routes/api/articles.js");
 connectDB();
 
   app.use(express.json({ extended: false }));
-  app.use(cors({ origin: 'http://localhost:3000', credentials: true, optionsSuccessStatus:200 }));
+  app.use(cors({ origin: true , credentials: true, optionsSuccessStatus:200 }));
 
   app.use("/", articles);
   app.use(express.urlencoded({ extended: true }));
