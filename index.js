@@ -33,7 +33,7 @@ connectDB();
   app.use(express.json({ extended: false }));
   app.use(cors({ origin: true , credentials: true, optionsSuccessStatus:200 }));
 
-  app.use("/", articles);
+  app.use("/api/articles", articles);
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   if (process.env.NODE_ENV === "production") {
@@ -47,6 +47,6 @@ connectDB();
 
 app.get("/", (req, res) => {res.json(app.stack);});
 //update books via app.use
-const PORT = process.env.PORT;
+const PORT = process.env.REACT_APP_BACKEND_PORT || 5555;
 
 app.listen(PORT, () => console.log(`Server up @ ${PORT}`));
