@@ -55,24 +55,29 @@ const Table = ({ columns, data, numArticles }) => {
             if (isBlankOrNull(rowTwoColumn)){
               return 0;
             } else{
-              return -1;
+              return 1;
             }
           } else if (isBlankOrNull(rowTwoColumn)){
-            return 1;
+            return -1;
           }
           rowOneColumn = rowOneColumn.trim();
           rowTwoColumn = rowTwoColumn.trim();
           if (startsWithNum(rowOneColumn) && startsWithNum(rowTwoColumn)) {
             
-            const startingNum1 = Number(rowOneColumn.match(/\d+/)[0]);
-            const startingNum2 = Number(rowTwoColumn.match(/\d+/)[0]);
-            return startingNum1 > startingNum2 ? 1 : (startingNum1 === startingNum2 ? 0 : -1);
-          } else if (isNaN(rowOneColumn)) {
-            //cast to string because rowTwoColumn can be a number, in which case
-            //the comparison is undefined
-            return String(rowOneColumn).toLowerCase() > String(rowTwoColumn).toLowerCase()
-              ? 1
-              : -1;
+            let startingNum1 = Number(rowOneColumn.match(/\d+/)[0]);
+            let startingNum2 = Number(rowTwoColumn.match(/\d+/)[0]);
+            let remainder1 = rowOneColumn.replace(String(startingNum1), '');
+            let remainder2 = rowTwoColumn.replace(String(startingNum2), '');
+            if (startingNum1 === startingNum2) return remainder1 > remainder2 ? 1 : -1;
+            else return startingNum1 > startingNum2 ? 1 : -1;
+          } 
+          if (startsWithNum(rowOneColumn) && !startsWithNum(rowTwoColumn)){
+            return 1;
+          } else if (!startsWithNum(rowOneColumn) && startsWithNum(rowTwoColumn)){
+            return -1;
+          } else{
+            //must be a string
+            return rowOneColumn.toLowerCase() > rowTwoColumn.toLowerCase() ? 1 : -1;
           }
         },
       },
