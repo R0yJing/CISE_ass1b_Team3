@@ -19,6 +19,9 @@ const IndeterminateCheckbox = React.forwardRef(
 let startsWithNum = (str) =>{
   return /^\d/.test(str);
 }
+let isBlankOrNull = (str) =>{
+  return str == null || str.trim() === ''
+}
 const Table = ({ columns, data, numArticles }) => {
   
   const {
@@ -46,26 +49,28 @@ const Table = ({ columns, data, numArticles }) => {
         alphanumeric: (row1, row2, columnName) => {
           console.log("sorting");
         
-          const rowOneColumn = row1.values[columnName];
-          const rowTwoColumn = row2.values[columnName];
-          if (rowOneColumn === null){
-            if (rowTwoColumn === null){
-              return -1;
+          let rowOneColumn = row1.values[columnName];
+          let rowTwoColumn = row2.values[columnName];
+          if (isBlankOrNull(rowOneColumn)){
+            if (isBlankOrNull(rowTwoColumn)){
+              return 0;
             } else{
               return -1;
             }
-          } else if (rowTwoColumn === null){
-            
+          } else if (isBlankOrNull(rowTwoColumn)){
             return 1;
           }
+          rowOneColumn = rowOneColumn.trim();
+          rowTwoColumn = rowTwoColumn.trim();
           if (startsWithNum(rowOneColumn) && startsWithNum(rowTwoColumn)) {
             
             const startingNum1 = Number(rowOneColumn.match(/\d+/)[0]);
             const startingNum2 = Number(rowTwoColumn.match(/\d+/)[0]);
-            return startingNum1 > startingNum2 ? 1 : -1;//(startingNum1 === startingNum2 ? 0 : -1);
+            return startingNum1 > startingNum2 ? 1 : (startingNum1 === startingNum2 ? 0 : -1);
           } else if (isNaN(rowOneColumn)) {
-           
-            return rowOneColumn.toLowerCase() > rowTwoColumn.toLowerCase()
+            //cast to string because rowTwoColumn can be a number, in which case
+            //the comparison is undefined
+            return String(rowOneColumn).toLowerCase() > String(rowTwoColumn).toLowerCase()
               ? 1
               : -1;
           }

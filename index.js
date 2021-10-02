@@ -47,6 +47,6 @@ connectDB();
 
 app.get("/", (req, res) => {res.json(app.stack);});
 //update books via app.use
-const PORT = process.env.REACT_APP_BACKEND_PORT || 5555;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server up @ ${PORT}`));
