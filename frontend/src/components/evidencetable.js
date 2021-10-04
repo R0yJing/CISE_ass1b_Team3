@@ -1,20 +1,9 @@
 import React, { useMemo } from "react";
 import { useTable, useSortBy, usePagination } from "react-table";
 import Dropdown from '../components/Dropdown';
-import styles from '../samerow.module.css';
+//import styles from '../samerow.module.css';
 
-const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef()
-    const resolvedRef = ref || defaultRef
 
-    React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate
-    }, [resolvedRef, indeterminate])
-
-    return <input type="checkbox" ref={resolvedRef} {...rest} />
-  }
-)
 
 let startsWithNum = (str) =>{
   return /^\d/.test(str);
@@ -160,7 +149,7 @@ const Table = ({ columns, data, numArticles }) => {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
-        <div className={styles.page_selection}>
+        <div >
           Go to page:
           <Dropdown
             title="Choose a page number"

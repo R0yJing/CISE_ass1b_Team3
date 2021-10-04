@@ -11,7 +11,8 @@ const SubmissionForm = () => {
   //if you haven't left the page and entered it again,
   //this won't be triggered
   //purpose: get the number of articles in db
-    
+  const checkDOI = () => {return false;}
+  
   let checkEntries = (listStr) => {
       
       var regexDoi = RegExp('/^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i'); //Checks to see if it's in the DOI Format
