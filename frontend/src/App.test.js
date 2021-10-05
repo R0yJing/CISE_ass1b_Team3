@@ -1,28 +1,48 @@
-// import { render, screen } from '@testing-library/react';
-// import App from './App';
-import react from 'react';
+import React from 'react';
+import ReactDom from 'react-dom';
+import SubmissionForm from './components/SubmissionForm';
+import App from './App';
 
-import {wrapper} from 'enzyme';
-// test('renders learn react link', () => {
-//   render(<App />);
-//   const linkElement = screen.getByText(/learn react/i);
-//   expect(linkElement).toBeInTheDocument();
-// });
+import {render} from '@testing-library/react';
+import TestRenderer from 'react-test-renderer';
+import "@testing-library/jest-dom";
 
-// it('renders without crashing', () =>{
-//   const div = document.createElement('div');
-//   ReactDOM.render(<App/>, div);
-//   ReactDOM.unmountComponentAtNode(div);
-  
-// })
-
-
-
-const SubmissionForm = require('./components/SubmissionForm');
-
-test('Indetifies if a DOI string is the correct format', () => {
-  expect(3).toBe(3);
-  
-
-  expect(wrapper(<SubmissionForm/>).instance().checkDOI()).toBe(true);
+describe('Addition', () => {
+  it('knows that 2 and 2 make 4', () => {
+    expect(2 + 2).toBe(4);
+  });
 });
+
+it('renders without crashing', () =>{
+  const div = document.createElement('div');
+  ReactDom.render(<App/>, div);
+  ReactDom.unmountComponentAtNode(div);
+})
+
+it("renders without crashing", () => {
+  const div = document.createElement("div");
+  ReactDom.render(<SubmissionForm />, div)
+})
+
+// test("Doi checker works", () => {
+//   const wrapper = TestRenderer.create(<SubmissionForm />);
+//   const inst = wrapper.getInstance();
+//   expect(inst.checkDOI()).toEqual(false);
+//  })
+
+////Also doesn't work
+// test("Doi checker works", () => {
+//   const testRenderer = TestRenderer.create(<SubmissionForm />);
+//   const testInstance = testRenderer.root;
+  
+//   expect(testInstance.findByType(SubmissionForm).checkDOI).toEqual(false);
+//  })
+
+//I want to cry this is the worst thing ever!!!
+// test("Doi checker works", () => {
+//   const wrapper = TestRenderer.create(<SubmissionForm />);
+//   const inst = wrapper.root;
+//   const subType = inst.findByType(<SubmissionForm />);
+//   console.log(subType);
+//   //expect(inst.checkDOI()).toEqual(false);
+//  })

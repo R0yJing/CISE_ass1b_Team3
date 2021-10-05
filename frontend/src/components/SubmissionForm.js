@@ -4,6 +4,7 @@ import axios from "axios";
 import {articles, setArticle} from "../dummydata/articles";
 import env from "../env";
 
+
 const SubmissionForm = () => {
   const { register, handleSubmit } = useForm();
   const [result, setResult] = useState("");
@@ -11,7 +12,8 @@ const SubmissionForm = () => {
   //if you haven't left the page and entered it again,
   //this won't be triggered
   //purpose: get the number of articles in db
-  const checkDOI = () => {return false;}
+
+  const checkDOI = () => {false;}
   
   let checkEntries = (listStr) => {
       

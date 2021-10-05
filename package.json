@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/R0yJing/CISE_ass1b_Team3#readme",
   "dependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
     "axios": "^0.21.4",
     "body-parser": "^1.19.0",
     "concurrently": "^6.2.1",
@@ -38,6 +39,8 @@
     "postman": "^0.2.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.14.5",
+    "@testing-library/react": "^12.1.2",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -47,6 +50,7 @@
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.2",
+    "react-test-render": "^1.1.2",
     "react-test-renderer": "^17.0.2"
   }
 }
