@@ -1,18 +1,28 @@
 import React, { useMemo } from "react";
 import { useTable, useSortBy, usePagination } from "react-table";
-import Dropdown from '../components/Dropdown';
-//import styles from '../samerow.module.css';
+import Dropdown from "../components/Dropdown";
+import styles from "../samerow.module.css";
 
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
 
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
 
-let startsWithNum = (str) =>{
+    return <input type="checkbox" ref={resolvedRef} {...rest} />;
+  }
+);
+
+let startsWithNum = (str) => {
   return /^\d/.test(str);
-}
-let isBlankOrNull = (str) =>{
-  return str == null || str.trim() === ''
-}
+};
+let isBlankOrNull = (str) => {
+  return str == null || str.trim() === "";
+};
 const Table = ({ columns, data, numArticles }) => {
-  
   const {
     getTableProps,
     getTableBodyProps,
@@ -37,36 +47,41 @@ const Table = ({ columns, data, numArticles }) => {
       sortTypes: {
         alphanumeric: (row1, row2, columnName) => {
           console.log("sorting");
-        
+
           let rowOneColumn = row1.values[columnName];
           let rowTwoColumn = row2.values[columnName];
-          if (isBlankOrNull(rowOneColumn)){
-            if (isBlankOrNull(rowTwoColumn)){
+          if (isBlankOrNull(rowOneColumn)) {
+            if (isBlankOrNull(rowTwoColumn)) {
               return 0;
-            } else{
+            } else {
               return 1;
             }
-          } else if (isBlankOrNull(rowTwoColumn)){
+          } else if (isBlankOrNull(rowTwoColumn)) {
             return -1;
           }
           rowOneColumn = rowOneColumn.trim();
           rowTwoColumn = rowTwoColumn.trim();
           if (startsWithNum(rowOneColumn) && startsWithNum(rowTwoColumn)) {
-            
             let startingNum1 = Number(rowOneColumn.match(/\d+/)[0]);
             let startingNum2 = Number(rowTwoColumn.match(/\d+/)[0]);
-            let remainder1 = rowOneColumn.replace(String(startingNum1), '');
-            let remainder2 = rowTwoColumn.replace(String(startingNum2), '');
-            if (startingNum1 === startingNum2) return remainder1 > remainder2 ? 1 : -1;
+            let remainder1 = rowOneColumn.replace(String(startingNum1), "");
+            let remainder2 = rowTwoColumn.replace(String(startingNum2), "");
+            if (startingNum1 === startingNum2)
+              return remainder1 > remainder2 ? 1 : -1;
             else return startingNum1 > startingNum2 ? 1 : -1;
-          } 
-          if (startsWithNum(rowOneColumn) && !startsWithNum(rowTwoColumn)){
+          }
+          if (startsWithNum(rowOneColumn) && !startsWithNum(rowTwoColumn)) {
             return 1;
-          } else if (!startsWithNum(rowOneColumn) && startsWithNum(rowTwoColumn)){
+          } else if (
+            !startsWithNum(rowOneColumn) &&
+            startsWithNum(rowTwoColumn)
+          ) {
             return -1;
-          } else{
+          } else {
             //must be a string
-            return rowOneColumn.toLowerCase() > rowTwoColumn.toLowerCase() ? 1 : -1;
+            return rowOneColumn.toLowerCase() > rowTwoColumn.toLowerCase()
+              ? 1
+              : -1;
           }
         },
       },
@@ -79,11 +94,11 @@ const Table = ({ columns, data, numArticles }) => {
     useSortBy,
     usePagination
   );
-  
- 
-  let pageRange =
-    [...Array(pageCount + 1).keys()].slice(1).map((num) => <option key={num}>{num}</option>);
-  
+
+  let pageRange = [...Array(pageCount + 1).keys()]
+    .slice(1)
+    .map((num) => <option key={num}>{num}</option>);
+
   return (
     <>
       <table {...getTableProps()}>
@@ -108,7 +123,6 @@ const Table = ({ columns, data, numArticles }) => {
                     )}
                   </span>
                 </th>
-
               ))}
             </tr>
           ))}
@@ -149,7 +163,7 @@ const Table = ({ columns, data, numArticles }) => {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
-        <div >
+        <div className={styles.page_selection}>
           Go to page:
           <Dropdown
             title="Choose a page number"
@@ -168,7 +182,7 @@ const Table = ({ columns, data, numArticles }) => {
             }}
             style={{ width: "100px" }}
           />
-        </div>
+        
         <select
           value={pageSize}
           onChange={(e) => {
@@ -181,13 +195,19 @@ const Table = ({ columns, data, numArticles }) => {
             </option>
           ))}
         </select>
+        </div>
       </div>
-      
-      <h3>
-          Column Hiding Options
-      </h3>
-      
-      <div style={{flex:2,flexDirection:"row",justifyContent:'space-between',padding:'1700'}}>
+
+      <h3>Column Hiding Options</h3>
+
+      <div
+        style={{
+          flex: 2,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          padding: "1700",
+        }}
+      >
         {allColumns.map((column) => (
           <div key={column.id}>
             <label>
