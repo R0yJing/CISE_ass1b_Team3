@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - HerokuHotfix
+      - HerokuHotfix2
 
 jobs:
   build:
