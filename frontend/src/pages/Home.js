@@ -66,9 +66,13 @@ class Home extends Component {
     return (
       <div>
         <h2> How to use SEPER</h2>
-        <button name={"delete all"} onClick={() => axios.delete(env.url)}>
+        <button name={"delete all"} onClick={() => axios.delete(env.url).then(err => console.log(err))}>
           
           Delete all data
+        </button>
+
+        <button name={"add all"} onClick={() => articles.forEach(article => axios.post(env.url, article))} >
+          adding allArticles
         </button>
       </div>
     );
