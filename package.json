@@ -12,7 +12,7 @@
     "heroku-postbuild": "npm run install-client && npm run build",
     "develop": "concurrently --kill-others-on-fail \"npm run app\" \"npm run start --prefix frontend\"",
     "start": "concurrently --kill-others-on-fail \"npm run app\" \"npm run start --prefix frontend\"",
-    "web-start": "concurrently --kill-others-on-fail \"npm run start --prefix frontend\""
+    "web-start": "concurrently --kill-others-on-fail \"npm run app\" \"npm run start --prefix frontend\""
   },
   "repository": {
     "type": "git",

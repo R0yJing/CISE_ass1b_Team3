@@ -47,6 +47,8 @@ connectDB();
 
 app.get("/", (req, res) => {res.json(app.stack);});
 //update books via app.use
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => console.log(`Server up @ ${PORT}`));
+const PORT = 5555 || process.env.PORT;
+app.listen(PORT, () => console.log(`Server up @ ${PORT} process env port = ${process.env.PORT}`));
+if (process.env.NODE_ENV == "production"){
+  console.log("production is running");
+} else console.log("development is running");
