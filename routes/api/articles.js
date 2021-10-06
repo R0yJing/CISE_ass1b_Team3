@@ -19,7 +19,8 @@ router.get("/", async (req, res) => {
 // });
 
 router.delete("/", async (req, res) => {
- 
+  console.log("deleting");
+  
   Article.deleteMany({})
     .then(res.send("deletions successful"))
     .catch((error) => console.log(error));
