@@ -13,7 +13,7 @@ const SubmissionForm = () => {
   //this won't be triggered
   //purpose: get the number of articles in db
 
-  const checkDOI = () => {false;}
+  //const checkDOI = () => {return false;}
   
   let checkEntries = (listStr) => {
       
