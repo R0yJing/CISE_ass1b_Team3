@@ -1,5 +1,8 @@
 import {Component} from "react";
+import AnalystPage from "./AnalystPage";
 
-class ModeratorPage extends Component{
-
+const ModeratorPage = ()=>{
+    return <AnalystPage role={"moderated"} />
 }
+
+export default ModeratorPage;

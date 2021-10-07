@@ -8,13 +8,30 @@ router.get("/", async (req, res) => {
     .catch((err) => res.status(404).json({ noArtFound: "No articles found" }));
   
 });
-
-router.put("/:id", async (req, res, next) =>{
-  console.log("updating");
+router.put("/moderated/:id", async (req, res, next) =>
+{
+  console.log("updating moderator");
   console.log(req.body.id);
   console.log(req.params.id);
   var analysedQuery = {_id : req.params.id};
-  var newValue = {$set:{analysed : true}}
+  var newValue = {$set:{moderated : true}}
+  Article.updateOne(analysedQuery, newValue, (err, res) =>{
+    if(err)
+      console.log("something bad happed : failed to set to analysed");
+    else
+      console.log("success");
+  });
+}
+);
+
+router.put("/:id", async (req, res, next) =>{
+  console.log("updating!!!!!!!");
+  console.log(req.body.id);
+  console.log(req.params.id);
+  console.log("claim" + req.body["claim"]);
+
+  var analysedQuery = {_id : req.params.id};
+  var newValue = {$set:{analysed : true, claim}}
   Article.updateOne(analysedQuery, newValue, (err, res) =>{
     if(err)
       console.log("something bad happed : failed to set to analysed");

@@ -3,18 +3,7 @@ import { useTable, useSortBy, usePagination } from "react-table";
 import Dropdown from "../components/Dropdown";
 import styles from "../samerow.module.css";
 
-const IndeterminateCheckbox = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef();
-    const resolvedRef = ref || defaultRef;
 
-    React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate;
-    }, [resolvedRef, indeterminate]);
-
-    return <input type="checkbox" ref={resolvedRef} {...rest} />;
-  }
-);
 
 let startsWithNum = (str) => {
   return /^\d/.test(str);
