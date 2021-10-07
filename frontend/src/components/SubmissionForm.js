@@ -66,8 +66,22 @@ const SubmissionForm = () => {
     }
   }
 
+  let checkPractice = () => {
+    if(!(document.getElementById("sePractice").value === "")){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   let checkEntries = (listStr) => {
     var errorString = "";
+    var isPracticeCorrect = true; 
+
+    if (!checkPractice()) {
+      isPracticeCorrect = false;
+    }
+
 
     if (!checkTitle(listStr["title"])) {
       errorString += "Title, "
@@ -86,13 +100,20 @@ const SubmissionForm = () => {
     }
     
     //if the error string is empty, then no errors have occured
-    if (errorString === "") {
+    if (errorString === "" && isPracticeCorrect) {
       return true
     }
     //if the error string isn't empty, alert the user
     else {
-      //The substring makes sure the finaly comma and space is remove from errorString 
+      if(!isPracticeCorrect && errorString === "")
+      {
+        alert("Please select a practice from the dropdown");
+      } else if(!isPracticeCorrect && errorString.length >= 1) {
+        alert("Please select a practice from the dropdown and fix the following entries: " + errorString.substring(0, errorString.length - 2));
+      } else {
+        //The substring makes sure the finaly comma and space is remove from errorString 
       alert("Please fix the following entries: " + errorString.substring(0, errorString.length - 2));
+      }
       return false;
     }
   }
