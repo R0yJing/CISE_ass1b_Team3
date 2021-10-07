@@ -25,6 +25,17 @@ const ArticleSchema = new mongoose.Schema({
   evidence: {
     type: String,
   },
+  moderated:{
+    type: Boolean
+  },
+  analysed :{
+    type:Boolean,
+    default:false
+  },
+  date:{
+    type:Date,
+    default: Date.now
+  }
 });
 
 module.exports = Article = mongoose.model("article", ArticleSchema);

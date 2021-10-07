@@ -104,9 +104,9 @@ const SubmissionForm = () => {
       console.log("keys = ");
     
 
-      if (!checkEntries(data)){
-        return;
-      } else alert("success!");
+      // if (!checkEntries(data)){
+      //   return;
+      // } else alert("success!");
       
       
       const articleData = {

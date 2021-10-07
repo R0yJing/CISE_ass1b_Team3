@@ -144,7 +144,7 @@ const Table = ({ columns, data, numArticles }) => {
       </table>
 
       {/* Pagination */}
-      <div className="pagination">
+      <span className="pagination">
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {"<<"}
         </button>{" "}
@@ -163,6 +163,7 @@ const Table = ({ columns, data, numArticles }) => {
             {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
+
         <div className={styles.page_selection}>
           Go to page:
           <Dropdown
@@ -196,8 +197,8 @@ const Table = ({ columns, data, numArticles }) => {
           ))}
         </select>
         </div>
-      </div>
-
+      </span>
+      
       <h3>Column Hiding Options</h3>
 
       <div

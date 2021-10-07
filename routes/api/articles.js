@@ -9,6 +9,27 @@ router.get("/", async (req, res) => {
   
 });
 
+router.put("/:id", async (req, res, next) =>{
+  console.log("updating");
+  console.log(req.body.id);
+  console.log(req.params.id);
+  var analysedQuery = {_id : req.params.id};
+  var newValue = {$set:{analysed : true}}
+  Article.updateOne(analysedQuery, newValue, (err, res) =>{
+    if(err)
+      console.log("something bad happed : failed to set to analysed");
+    else
+      console.log("success");
+  });
+
+})
+
+// router.put("/:id", (req, res, next) => {
+//   User.findById(req.params.id)
+//     .then((user) => user.update(req.body))
+//     .then((updated) => res.status(201).json(updated))
+//     .catch(next);
+// });
 // router.get("/:id", async (req, res) => {
 //   console.log("finding...");
 

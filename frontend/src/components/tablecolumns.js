@@ -1,5 +1,17 @@
 const tablecolumns = [
   {
+    Header: "Checkbox",
+    access: "checkbox",
+    Cell: row=>{
+        return(
+          <input type="checkbox"
+          defaultChecked={row.value === "Yes" ? true : false}
+          onBlur={(event)=>clearRows(parseInt(row.row.id),
+             row.column.id, event.target.checked ? "Yes" : "No")} />
+        )
+    }
+  },
+  {
     Header: "Title",
     accessor: "title",
     sortType: "alphanumeric",
