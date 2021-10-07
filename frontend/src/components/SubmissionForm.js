@@ -14,15 +14,14 @@ const SubmissionForm = () => {
   //this won't be triggered
   //purpose: get the number of articles in db
 
-  function checkDOI(string) {
-    var regexDoi = RegExp('/^10.\\d{4,9}/[-._;()/:A-Z0-9]+$/i/'); //Checks to see if it's in the DOI Format '/^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i/'
-    var regexDOI = RegExp('\\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])\\S)+)\\b'); // '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])\S)+)\b'
-    var potentialRegexDOI = RegExp('/^10.\\d{4}/\\d+-\\d+X?(\\d+)\\d+<[\\d\\w]+:[\\d\\w]*>\\d+.\\d+.\\w+;\\d$/i'); ///^10.\d{4}/\d+-\d+X?(\d+)\d+<[\d\w]+:[\d\w]*>\d+.\d+.\w+;\d$/i
-    var potentialRegexDOI2 = RegExp("/^10.\\d{4,9}/[-._;()/:A-Z0-9]+$/i")  //   /^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i
-    var DOIpattern = new RegExp('\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])\S)+)\b');
-    var anotherDOIPattern = new RegExp('10\\.[^/]+/([^(\s\>\\"\\<})])+')
+  let checkDOI = (string) => {
+    //'/^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i/'
+    // '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])\S)+)\b'
+    // /^10.\d{4}/\d+-\d+X?(\d+)\d+<[\d\w]+:[\d\w]*>\d+.\d+.\w+;\d$/i
+    //   /^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i
+    // '10\\.[^/]+/([^(\s\>\\"\\<})])+'
 
-    //Is super basic, but works, so we will stick with it!!!!
+    //Is super basic, but works, so we will stick with it for right now, the above option should be reconsidered later if they can be make to finally work.
     var basicDOIpattern = RegExp("10.(\\d)+/(\\S)+")
 
     if(basicDOIpattern.test(string)){
@@ -33,6 +32,16 @@ const SubmissionForm = () => {
     }
   }
 
+  let checkTitle = (title) => {
+    //Assuming you can't have an acedemic title that 2 or less characters. Could be approved upon in the future.
+    if (!(title=== "") && title.length >= 3) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  
   let checkAuthors = (authors) => {
     var regexAuthors = RegExp("^[\\w'\\-,.][^0-9_!¡?÷?¿/\\\+=@#$%ˆ&*(){}|~<>;:[\\]]{2,}$");
 
@@ -42,21 +51,16 @@ const SubmissionForm = () => {
     else {
       return false;
     }
-
   }
 
   let checkYear = (year) => {
     if (!isNaN(year)) {
       var number = Number(year);
       var yearCurrent = Number(new Date().getFullYear());
-      //console.log( year);
-      //console.log(number);
 
       if (number < 1900 || number > yearCurrent) {
-        console.log("Invalid year");
         return false;
       } else {
-        console.log("Valid year");
         return true;
       }
     }
@@ -65,6 +69,10 @@ const SubmissionForm = () => {
   let checkEntries = (listStr) => {
     var errorString = "";
 
+    if (!checkTitle(listStr["title"])) {
+      errorString += "Title, "
+    }
+    
     if (!checkAuthors(listStr["authors"])) {
       errorString += "Authors, "
     }
@@ -87,47 +95,6 @@ const SubmissionForm = () => {
       alert("Please fix the following entries: " + errorString.substring(0, errorString.length - 2));
       return false;
     }
-
-
-
-
-    //console.log("type of " + typeof listStr);
-
-    // var regexDOIObj = RegExp(regexDOI);
-
-    // var regexName = RegExp("^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$"); //Not a perfect name checker, but better then nothing.
-    // console.log("list str = " + listStr["title"]);
-    // console.log(listStr);
-
-    //  console.log(/^([a-z0-9]{5,})$/.test('abc1')); // false
-
-    //  var term = "sample1";
-    // var re = new RegExp("^([a-z0-9]{5,})$");
-    // if (re.test(term)) {
-    //     console.log("Valid");
-    // } else {
-    //     console.log("Invalid");
-
-
-
-
-
-
-
-
-    // if (listStr["doi"].length === ""
-    //   || isNaN(listStr["pubyear"])
-
-    //   || (document.getElementById("sePractice") === "")
-    //   || listStr["title"] === ""
-    //   || listStr["claim"] === ""
-    //   || listStr["authors"] === "")
-    // {
-
-    //   alert("Invalid entries detected");
-    //   return false;
-    // } else return true;
-
   }
 
 
