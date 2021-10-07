@@ -86,9 +86,10 @@ const Table = ({ columns, data, numArticles }) => {
   
   return (
     <>
-      <table {...getTableProps()}>
+      <table {...getTableProps()}
+      >
         <thead>
-          {headerGroups.map((headerGroup) => (
+                {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 // Add the sorting props to control sorting. For this example
@@ -121,13 +122,31 @@ const Table = ({ columns, data, numArticles }) => {
                 {row.cells.map((cell) => {
                   return (
                     <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
+                  )
                 })}
               </tr>
             );
           })}
         </tbody>
       </table>
+      getTableBodyProps = {(state,rowInfo) =>{
+        if (rowInfo && rowInfo.row) {
+          return {
+            onClick: (e) => {
+              this.setState({
+                selected: rowInfo.index
+              })
+            },
+            style: {
+              background: rowInfo.index === this.state.selected ? '#00afec' : 'white',
+              color: rowInfo.index === this.state.selected ? 'white' : 'black'
+            }
+          }
+        }else{
+          return {}
+        }
+      }
+      }
 
       {/* Pagination */}
       <div className="pagination">

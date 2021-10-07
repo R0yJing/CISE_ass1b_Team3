@@ -1,0 +1,13 @@
+import ModeratingPage from "../pages/ModeratorPage";
+
+const SEPractices = [
+    {
+      id: 1,
+      practice: "TDD",
+    },
+    {
+      id: 2,
+      practice: "Mob programming",
+    },
+  ];
+  export default ModeratingPage;

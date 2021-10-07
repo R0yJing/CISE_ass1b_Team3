@@ -10,6 +10,8 @@ import Home from "./pages/Home";
 import SEPractice from "./pages/SE-Practice";
 import SubmitArticle from "./pages/Submit-Article";
 import NotFoundPage from "./pages/404";
+import ModeratorPage from "./pages/Search";
+import Search from "./pages/Search";
 
 const App = () => {
   
@@ -30,11 +32,16 @@ const App = () => {
           <li>
             <NavLink to="/SubmitArticle">Submit an Article</NavLink>
           </li>
+          <li>
+            <NavLink to="/Search">Moderator</NavLink>
+          </li>
         </ul>
         <div className="content">
           <Route exact path="/" component={Home} />
           <Route path="/SEPractice" component={SEPractice} />
           <Route path="/SubmitArticle" component={SubmitArticle} />
+          <Route path="/Search" component={Search} />
+          
         </div>
       </div>
     </Router>

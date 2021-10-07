@@ -12,7 +12,7 @@ const optionItems = SEPractices.map((SEPractice) => (
 ));
 
 //this is the SE table page
-class SEPractice extends Component {
+class Search extends Component {
 
     state = {
         //current articles filtered by se practice
@@ -35,8 +35,8 @@ class SEPractice extends Component {
 
     handleChange = (e) =>{
         console.log(e.target.value);
-          this.state.allArticles.forEach(item => {if(item["cat"].toLowerCase() === e.target.value.toLowerCase()) console.log("yes")});
-    let temp = this.state.allArticles.filter(
+          this.state.allArticles.forEach(item => {if (item["cat"].toLowerCase() === e.target.value.toLowerCase()) console.log("yes")});
+    let temp =  this.state.allArticles.filter(
        (item) => item["cat"].toLowerCase() === e.target.value.toLowerCase()
      );
      console.log("temp" + temp);
@@ -69,7 +69,7 @@ class SEPractice extends Component {
             return (
               <div>
                 <h2>
-                  Select SE Practice to get evidence for the claimed benefits
+                  Select SE Practice to Moderate
                 </h2>
                 <Dropdown title='Select an SE practice' optionItems = {optionItems} handleChange={this.handleChange} />
               </div>
@@ -77,4 +77,4 @@ class SEPractice extends Component {
             
     }
 }
-export default SEPractice;
+export default Search;
