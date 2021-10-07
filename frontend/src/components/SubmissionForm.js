@@ -22,7 +22,7 @@ const SubmissionForm = () => {
     // '10\\.[^/]+/([^(\s\>\\"\\<})])+'
 
     //Is super basic, but works, so we will stick with it for right now, the above option should be reconsidered later if they can be make to finally work.
-    var basicDOIpattern = RegExp("10.(\\d)+/(\\S)+")
+    var basicDOIpattern = RegExp("10.(\\d{4})+/(\\S)+")
 
     if(basicDOIpattern.test(string)){
       return true;
