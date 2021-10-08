@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 if (process.env.NODE_ENV === "production") {
   console.log("production version " + process.env.NODE_ENV);
-  app.use(express.static(path.resolve(__dirname, "/frontend/build")));
+  app.use(express.static(path.resolve(__dirname, "./frontend/build")));
   app.get("*", function (request, response) {
     response.sendFile(path.join(__dirname + "/frontend/build/index.html"));
   });
