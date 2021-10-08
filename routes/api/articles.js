@@ -13,8 +13,12 @@ router.put("/moderated/:id", async (req, res, next) =>
   console.log("updating moderator");
   console.log(req.body.id);
   console.log(req.params.id);
+  console.log("thisis evidence" + req.body["evidence"]);
+  console.log("thisis evidence" + req.body.evidence);
+  
   var analysedQuery = {_id : req.params.id};
-  var newValue = {$set:{moderated : true}}
+
+  var newValue = { $set: { moderated: true, claim: req.body["claim"], evidence:req.body["evidence"] } };
   Article.updateOne(analysedQuery, newValue, (err, res) =>{
     if(err)
       console.log("something bad happed : failed to set to analysed");
@@ -23,6 +27,17 @@ router.put("/moderated/:id", async (req, res, next) =>
   });
 }
 );
+
+
+router.delete("/:id", async (req, res, next)=>{
+  Article.findOneAndRemove({_id : req.params.id}, (err, res)=>{
+    if (err)
+      console.warn("failed to delete " + req.params.id);
+    else
+      console.warn("discard successful");
+  }
+);})
+
 
 router.put("/:id", async (req, res, next) =>{
   console.log("updating!!!!!!!");

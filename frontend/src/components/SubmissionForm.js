@@ -107,10 +107,10 @@ const SubmissionForm = () => {
       // if (!checkEntries(data)){
       //   return;
       // } else alert("success!");
-      
+      alert(document.getElementById("sePractice").value);
       
       const articleData = {
-        cat: document.getElementById("sePractice"),
+        cat: document.getElementById("sePractice").value,
         title: data["title"],
         authors: data["authors"],
         source: data["source"],
@@ -118,12 +118,14 @@ const SubmissionForm = () => {
         doi: data["doi"],
         claim: data["claim"],
         evidence: data["evidence"],
+        moderated:false,
+        analysed:false
       };
       
       console.log("title " + data.title);
       
       axios
-        .post(env.url, data)
+        .post(env.url, articleData)
         .then((res) => {
           alert("article posted");
         // res.send({posted: 'posted'});

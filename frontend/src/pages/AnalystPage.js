@@ -9,7 +9,14 @@ import SEPractice from "../pages/SE-Practice";
 
 class AnalystPage extends Component {
   state = {
-    lvlEvidenceDropdownItems : ["Strongly Support", "Weakly Support", "Weakly Against", "Strongly Against"].map((item, idx) => <option  key={idx}>{item}</option>),
+    checkedRole: false,
+    lvlEvidenceDropdownItems: [
+      "Strongly Support",
+      "Weakly Support",
+      "Weakly Against",
+      "Strongly Against",
+    ].map((item, idx) => <option key={idx}>{item}</option>),
+    deleleteButton:null,
     role: "",
     checkboxUnchecked: ["Claim", "Evidence"],
     data: [],
@@ -67,9 +74,12 @@ class AnalystPage extends Component {
           return (
             <input
               defaultValue={"Type claimed benefit"}
-              onBlur={(e) =>
-                (this.state.data[row.row.id]["claim"] = e.target.value)
-              }
+              onKeyDown={(e) =>{
+                if (e.key==='Enter'){
+                  this.state.data[row.row.id]["claim"] = e.target.value;
+                  
+                }
+              }}
             />
           );
         },
@@ -80,10 +90,14 @@ class AnalystPage extends Component {
         accessor: "evidence",
         Cell: (row) => {
           return (
-            <Dropdown 
-            optionItems={this.state.lvlEvidenceDropdownItems} 
-            title={"Select Level of Evidence"} 
-            onChanged={e=>this.state.data[row.row.id]=e.target.value}/>
+            <Dropdown
+              optionItems={this.state.lvlEvidenceDropdownItems}
+              title={"Select Level of Evidence"}
+              handleChange={(e) => {
+                alert("changed");
+                this.state.data[row.row.id]["evidence"] = e.target.value
+              }}
+            />
           );
         },
         sortType: "alphanumeric",
@@ -103,32 +117,129 @@ class AnalystPage extends Component {
     console.log("unclearRows called");
     this.removeFromArray(idx, this.state.currentDeletedIdx);
   }
-  checkEntriesValid(event, idx) {
-    alert("checking " + idx);
+  
+  getFields(idx) {
+    alert("called getFields");
+    if (this.props.role !== undefined){
+     
+        return [ {"evidence" : this.state.data[idx]["evidence"],
+                  "claim" : this.state.data[idx]["claim"]}]
+                            
+
+    }
+    else return { analysed: true };
   }
+
   componentDidMount() {
-    let shouldTestForAnalysed = true;
-    if (this.props.role !== undefined) {
-      this.state.role = this.props.role + "/";
-      shouldTestForAnalysed = false;
-      alert("on moderator");
+    if (!this.state.checkedRole) {
+      this.state.checkedRole = true;
+      if (this.props.role !== undefined) {
+        this.state.role = this.props.role + "/";
+        
+      } else {
+    
+        this.state.columnsAnalyst.splice(0, 1);
+        this.modifyColumns();
+        this.setState({
+          columnsAnalyst:this.state.columnsAnalyst});
+        document.getElementById("deleteBtn").style.visibility = "hidden";
+      }
     }
 
+    if (this.props.data === undefined) {
+      let tempData = [];
+      
+      axios
+        .get(env.url)
+        .then((res) => {
+          tempData = res.data;
+          this.setState({data:tempData.filter(elem => elem["moderated"] && !elem["analysed"] )})
+        })
+        .catch((err) => console.log("something bad happend"));
+      
+      
+    } else {
+      this.receiveDataModerator();
+    }
+  }
+  modifyColumns(){
+    this.state.columnsAnalyst = this.state.columnsAnalyst.slice(
+      0,
+      this.state.columnsAnalyst.length - 2
+    );
+    this.state.columnsAnalyst.push({
+      Header:"Claimed Benefit",
+      accessor:"claim"}
+    );
+    this.state.columnsAnalyst.push({
+      Header:"Level of Evidence",
+      accessor:"evidence"
+    });
+    this.setState({columnsAnalyst:this.state.columnsAnalyst});
+
+  }
+  receiveDataModerator() {
+    let tempData = [];
     axios
       .get(env.url)
       .then((res) => {
-        let temp = res.data.filter(
-          (queriedItem) =>
-            queriedItem["date"] !== null &&
-            queriedItem["moderated"] &&
-            (!shouldTestForAnalysed ||
-              (queriedItem["analysed"] !== null && queriedItem["analysed"]))
+        
+        tempData = res.data.filter(
+          (item) => !item["moderated"] && !item["analysed"]
         );
-
-        temp.sort((a, b) => a.date > b.date);
-        this.setState({ data: temp });
+        this.setState({ data: tempData });
       })
-      .catch((err) => console.log("error in analyst page"));
+      .catch((err) => console.log(err));
+  }
+  askForConfirm() {
+    return window.confirm(
+      "Are you sure you want to confirm this submission? This action cannot be undone"
+    );
+  }
+  discard(event) {
+    if (this.askForConfirm())
+      this.state.currentDeletedIdx.forEach((idx) =>
+        axios
+          .delete(env.url + "/" + this.state.data[idx]["_id"])
+          .then((res) => {
+            let temp = this.state.data;
+            this.removeFromArray(idx, this.state.data);
+            alert("article successfully discarded");
+            this.setState({ data: temp });
+          })
+          .catch((err) => console.log("something bad happened!"))
+      );
+      
+  }
+
+  update(event) {
+  
+    if (this.askForConfirm()) {
+      let err = "";
+      if (this.state.checkboxUnchecked.length !== 0) {
+        this.state.checkboxUnchecked.forEach((item) => (err += item + " "));
+        alert("Please check the following before you proceed\n" + err);
+
+        return;
+      }
+    } else return;
+
+    let dataRef = this.state.data;
+
+    this.state.currentDeletedIdx.forEach((idx) => {
+      let fieldsToUpdate = this.getFields(idx);
+      window.alert(env.url + "/" + this.state.role + dataRef[idx]["_id"]);
+      axios
+        .put(
+          env.url + "/" + this.state.role + dataRef[idx]["_id"],
+          fieldsToUpdate
+        )
+        .then((res) => window.alert("analyst submiisssion successul"))
+        .catch((err) => console.error("cannot update"));
+      //this.state.deletedItems.push(this.state.data[idx]["_id"]);
+      this.removeFromArray(idx, dataRef);
+    });
+    this.setState({ data: dataRef });
   }
 
   render() {
@@ -164,72 +275,17 @@ class AnalystPage extends Component {
             evidence is sound
           </label>
         </span>
-        <button
-          onClick={(event) => {
-            if (
-              window.confirm(
-                "Are you sure you want to confirm this submission? This action cannot be undone"
-              )
-            ) {
-              let err = "";
-              if (this.state.checkboxUnchecked.length !== 0) {
-                this.state.checkboxUnchecked.forEach(
-                  (item) => (err += item + " ")
-                );
-                alert("Please check the following before you proceed\n" + err);
-
-                return;
-              }
-            }
-
-            let dataRef = this.state.data;
-            this.state.currentDeletedIdx.forEach((idx) => {
-              let evidenceAndClaim = {
-                evidence: this.state.data[idx]["evidence"],
-                claim: this.state.data["claim"],
-              };
-
-              window.alert("posting to analyst" + evidenceAndClaim["evidence"]);
-              window.alert(
-                env.url + "/" + this.state.role + dataRef[idx]["_id"]
-              );
-              axios
-                .put(
-                  env.url + "/" + this.state.role + dataRef[idx]["_id"],
-                  evidenceAndClaim
-                )
-                .then((res) => window.alert("analyst submiisssion successul"))
-                .catch((err) => console.error("cannot update"));
-              //this.state.deletedItems.push(this.state.data[idx]["_id"]);
-              this.removeFromArray(idx, dataRef);
-            });
-            this.setState({ data: dataRef });
-          }}
-        >
-          Submit all checked items to SEPER
-        </button>
+        <span>
+          <button onClick={(e) => this.update(e)}>
+            Submit all checked items to SEPER
+          </button>
+          <button id={"deleteBtn"} onClick={(e) => this.discard(e)}> Discard this item </button>
+        </span>
       </div>
     );
   }
 }
-let checkboxWithLabel = ({text, parentState}) =>{
-  return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          onClick={(e) => {
-            if (e.target.checked) {
-              parentState.checkboxUnchecked.splice(text, 1);
-            } else parentState.checkboxUnchecked.push(text);
-          }}
-        >
-          {text}
-        </input>
-      </label>
-    </div>
-  );
-}
+
 
 
 
