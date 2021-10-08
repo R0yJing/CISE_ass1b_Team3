@@ -5,9 +5,15 @@ import axios from "axios";
 import Dropdown from "../components/Dropdown.js";
 import env from "../env";
 import SEPractices from "../dummydata/SEPractices";
-import SEPractice from "../pages/SE-Practice";
+import SEPractice from "./SE-Practice";
 
-class AnalystPage extends Component {
+/*
+  *the purpose of TableTemplate is to act as a default template to build pages with tables.
+  *the table can be modified into a queue by sorting the table at runtime (so it becomes a FIFO queue)
+  *after retrieve the date information from the backend MongoDB
+*/
+
+class TableTemplate extends Component {
   state = {
     checkedRole: false,
     lvlEvidenceDropdownItems: [
@@ -94,7 +100,7 @@ class AnalystPage extends Component {
               optionItems={this.state.lvlEvidenceDropdownItems}
               title={"Select Level of Evidence"}
               handleChange={(e) => {
-                alert("changed");
+          
                 this.state.data[row.row.id]["evidence"] = e.target.value
               }}
             />
@@ -146,7 +152,7 @@ class AnalystPage extends Component {
       }
     }
 
-    if (this.props.data === undefined) {
+    if (this.props.role === undefined) {
       let tempData = [];
       
       axios
@@ -179,13 +185,14 @@ class AnalystPage extends Component {
 
   }
   receiveDataModerator() {
+
     let tempData = [];
     axios
       .get(env.url)
       .then((res) => {
         
         tempData = res.data.filter(
-          (item) => !item["moderated"] && !item["analysed"]
+          (item) => item["moderated"] === false && item["analysed"] === false
         );
         this.setState({ data: tempData });
       })
@@ -228,7 +235,6 @@ class AnalystPage extends Component {
 
     this.state.currentDeletedIdx.forEach((idx) => {
       let fieldsToUpdate = this.getFields(idx);
-      window.alert(env.url + "/" + this.state.role + dataRef[idx]["_id"]);
       axios
         .put(
           env.url + "/" + this.state.role + dataRef[idx]["_id"],
@@ -289,4 +295,4 @@ class AnalystPage extends Component {
 
 
 
-export default AnalystPage;
+export default TableTemplate;

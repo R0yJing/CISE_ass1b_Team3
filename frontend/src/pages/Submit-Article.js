@@ -11,8 +11,7 @@ class SubmitArticle extends Component{
     <div>
       <h2>Submit Article</h2>
       <p>
-        This will be a form to allow submitters to submit an article for
-        possible inclusion in our SEPER repo.
+        Please submit your article here.
       </p>
       
       <SubmissionForm/>

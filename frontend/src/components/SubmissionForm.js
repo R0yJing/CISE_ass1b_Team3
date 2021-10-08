@@ -12,89 +12,108 @@ const SubmissionForm = () => {
   //if you haven't left the page and entered it again,
   //this won't be triggered
   //purpose: get the number of articles in db
-  function checkDOI(string) {
-    //Redundant. I know
-    var testKey = String(string);
-    var DOIpattern = "\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&'<>])S)+)\b";
+ 
+  let checkDOI = (string) => {
+    //Is super basic, but works, so we will stick with it for right now, the above option should be reconsidered later if they can be make to finally work.
+    var basicDOIpattern = RegExp("10.(\\d{4})+/(\\S)+");
 
-    var found = new RegExp(DOIpattern).test(testKey);
-    console.log("found", found + " DOI " + testKey);
-    return found;
-  }
-  
-  let checkYear = (year) =>{
-  if (!isNaN(year)) {
-    var number = Number(year);
-    var yearCurrent = Number(new Date().getFullYear());
-    //console.log( year);
-    //console.log(number);
-
-    if (number < 1900 || number >yearCurrent) {
-      console.log("Invalid year");
+    if (basicDOIpattern.test(string)) {
+      return true;
+    } else {
       return false;
-    } else{
-        console.log("Valid year");
+    }
+  };
+
+  let checkTitle = (title) => {
+    //Assuming you can't have an acedemic title that 2 or less characters. Could be approved upon in the future.
+    if (!(title === "") && title.length >= 3) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  let checkAuthors = (authors) => {
+    var regexAuthors = RegExp(
+      "^[\\w'\\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\\]]{2,}$"
+    );
+
+    if (regexAuthors.test(authors)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  let checkYear = (year) => {
+    if (!isNaN(year)) {
+      var number = Number(year);
+      var yearCurrent = Number(new Date().getFullYear());
+
+      if (number < 1900 || number > yearCurrent) {
+        return false;
+      } else {
         return true;
-    } 
-  }
-}
+      }
+    }
+  };
+
+  let checkPractice = () => {
+    if (!(document.getElementById("sePractice").value === "")) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+ 
 
   let checkEntries = (listStr) => {
-      console.log("type of " + typeof listStr);
-      
-      var regexDoi = RegExp('/^10.\d{4,9}/[-._;()/:A-Z0-9]+$/i/'); //Checks to see if it's in the DOI Format
-      //var regexYear = RegExp('^(?:19|20)\d{2}$') //Checks to see if it is a year between 1900 and 2099
-      var regexDOI = '\b(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?!["&\'<>])\S)+)\b';
-      var regexDOIObj = RegExp(regexDOI);
-      
-      var regexName = RegExp("^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$"); //Not a perfect name checker, but better then nothing.
-      console.log("list str = "+ listStr["title"]);
-      console.log(listStr);
-
-    //  console.log(/^([a-z0-9]{5,})$/.test('abc1')); // false
-
-    //  var term = "sample1";
-    // var re = new RegExp("^([a-z0-9]{5,})$");
-    // if (re.test(term)) {
-    //     console.log("Valid");
-    // } else {
-    //     console.log("Invalid");
-
     var errorString = "";
+    var isPracticeCorrect = true;
 
-     if (!(regexDoi.test(listStr["doi"]))) {
-      
-       errorString += "Doi, "
-     }
-    
-      if (!checkYear(listStr["pubyear"])){
-        errorString += "Year, "  
-      }
-     
+    if (!checkPractice()) {
+      isPracticeCorrect = false;
+    }
+
+    if (!checkTitle(listStr["title"])) {
+      errorString += "Title, ";
+    }
+
+    if (!checkAuthors(listStr["authors"])) {
+      errorString += "Authors, ";
+    }
+
+    if (!checkYear(listStr["pubyear"])) {
+      errorString += "Year, ";
+    }
+
+    if (!checkDOI(listStr["doi"])) {
+      errorString += "Doi, ";
+    }
 
     //if the error string is empty, then no errors have occured
-     if(errorString === ""){
-       return true
-     }
-     //if the error string isn't empty, alert the user
-     else{
-       alert("Invalid entries are: " + errorString);
-       return false;
-     }
-      // if (listStr["doi"].length === ""
-      //   || isNaN(listStr["pubyear"])
-      
-      //   || (document.getElementById("sePractice") === "")
-      //   || listStr["title"] === ""
-      //   || listStr["claim"] === ""
-      //   || listStr["authors"] === "")
-      // {
-      
-      //   alert("Invalid entries detected");
-      //   return false;
-      // } else return true;
-  
+    if (errorString === "" && isPracticeCorrect) {
+      return true;
     }
+    //if the error string isn't empty, alert the user
+    else {
+      if (!isPracticeCorrect && errorString === "") {
+        alert("Please select a practice from the dropdown");
+      } else if (!isPracticeCorrect && errorString.length >= 1) {
+        alert(
+          "Please select a practice from the dropdown and fix the following entries: " +
+            errorString.substring(0, errorString.length - 2)
+        );
+      } else {
+        //The substring makes sure the finaly comma and space is remove from errorString
+        alert(
+          "Please fix the following entries: " +
+            errorString.substring(0, errorString.length - 2)
+        );
+      }
+      return false;
+    }
+  };
 
 
 
@@ -104,11 +123,10 @@ const SubmissionForm = () => {
       console.log("keys = ");
     
 
-      // if (!checkEntries(data)){
-      //   return;
-      // } else alert("success!");
-      alert(document.getElementById("sePractice").value);
-      
+      if (!checkEntries(data)){
+        return;
+      } 
+    
       const articleData = {
         cat: document.getElementById("sePractice").value,
         title: data["title"],
@@ -128,10 +146,6 @@ const SubmissionForm = () => {
         .post(env.url, articleData)
         .then((res) => {
           alert("article posted");
-        // res.send({posted: 'posted'});
-          res.status(0);
-
-
         })
         .catch((err) => {
           console.log("Error submitting!");

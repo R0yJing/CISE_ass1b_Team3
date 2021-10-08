@@ -2,78 +2,16 @@ import axios from "axios";
 import React, { Component } from "react";
 import env from '../env';
 
-const articles = [
-    {
-
-      title: 'An experimental evaluation of test driven development vs. test-last development with industry professionals',
-      authors: "Munir, H., Wnuk, K., Petersen, K., Moayyed, M.",
-      source: "EASE",
-      pubyear: "2014",
-      doi: "https://doi.org/10.1145/2601248.2601267",
-      claim: "code quality improvement", 
-      evidence: "strong support",
-      cat: "TDD"
-    },
-  {
- 
-      title: 'An experimental evaluation of test driven development vs. test-last development with industry professionals',
-      authors: "Munir, H., Wnuk, K., Petersen, K., Moayyed, M.",
-      source: "EASE",
-      pubyear: "2014",
-      doi: "https://doi.org/10.1145/2601248.2601267",
-      claim: "product quality improvement", 
-      evidence: "weak support",
-      cat :"TDD"
-  },
-    {
-     
-      title: 'Realizing quality improvement through test driven development: results and experiences of four industrial teams',
-      authors: "Nagappan, N., Maximilien, E. M., Bhat, T., Williams, L.",
-      source: " Empirical Software Engineering, 13(3), 289–302",
-      pubyear: "2008",
-      doi: "https://doi.org/10.1007/s10664-008-9062-z",
-      claim: "product quality improvement", 
-      evidence: "weak support",
-      cat: "TDD"
-    },
-    {
-     
-      title: "Does Test-Driven Development Really Improve Software Design Quality?",
-      authors: "Janzen, D. S.",
-      source: "Software, IEEE, 25(2) 77-84",
-      pubyear: "2008",
-      doi: "",
-      claim: "code quality improvement", 
-      evidence: "strong support",
-      cat : "TDD"
-    },
-    {
-
-      title: "A Comparative Case Study on the Impact of Test-Driven Development on Program Design and Test Coverage",
-      authors: "Siniaalto, M., Abrahamsson, P.",
-      source: "ArXiv.Org, cs.SE, arXiv:1711.05082-284",
-      pubyear: "2017",
-      doi: "https://doi.org/10.1109/esem.2007.35",
-      claim: "code quality improvement", 
-      evidence: "weak against",
-      cat : "TDD"
-    },
-  ];
 class Home extends Component {
   
 
   render() {
     return (
       <div>
-        <h2> How to use SEPER</h2>
-        <button name={"delete all"} onClick={() => axios.delete(env.url).then(err => console.log(err))}>
-          
-          Delete all data
-        </button>
-
-        <button name={"add all"} onClick={() => articles.forEach(article => axios.post(env.url, article))} >
-          adding allArticles
-        </button>
+        <h1 color={"green"}> Welcome to the SEPER repository!</h1>
+        <h2> Please go to the Submitter An Article Page to view articles</h2>
+        <h2> Alternatively, if you are a Moderator or an Analyst, please head to</h2>
+        <h2> Moderator Page or Analyst Page</h2> 
       </div>
     );
   }

@@ -5,12 +5,11 @@ import {
   BrowserRouter as Router,
   Redirect,
 } from "react-router-dom";
-import Styles from "./components/tablestyle.js";
 import Home from "./pages/Home";
 import SEPractice from "./pages/SE-Practice";
 import SubmitArticle from "./pages/Submit-Article";
 import NotFoundPage from "./pages/404";
-import AnalystPage from "./pages/AnalystPage";
+import TableTemplate from "./pages/TableTemplate";
 import ModeratorPage from "./pages/ModeratorPage";
 
 const App = () => {
@@ -43,7 +42,7 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route path="/SEPractice" component={SEPractice} />
           <Route path="/SubmitArticle" component={SubmitArticle} />
-          <Route path="/AnalystPage" component={AnalystPage} />
+          <Route path="/AnalystPage" component={TableTemplate} />
           <Route path="/ModeratorPage" component={ModeratorPage} />
         </div>
       </div>
