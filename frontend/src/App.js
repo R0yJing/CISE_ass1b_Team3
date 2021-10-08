@@ -19,7 +19,6 @@ const App = () => {
       <div>
         <h1>Software Engineering Practice Evidence Repository (SEPER)</h1>
         <ul className="header">
-        
           <li>
             <NavLink exact to="/">
               Home
@@ -31,19 +30,20 @@ const App = () => {
           <li>
             <NavLink to="/SubmitArticle">Submit an Article</NavLink>
           </li>
+
           <li>
-            <NavLink to="/AnalystPage">Analyst Page</NavLink>
+            <NavLink to="/AnalystPage"> Moderator Page</NavLink>
           </li>
           <li>
-            <NavLink to="/ModeratorPage"> Moderator Page</NavLink>
+            <NavLink to="/ModeratorPage">Analyst Page</NavLink>
           </li>
         </ul>
         <div className="content">
           <Route exact path="/" component={Home} />
           <Route path="/SEPractice" component={SEPractice} />
           <Route path="/SubmitArticle" component={SubmitArticle} />
-          <Route path="/AnalystPage" component={TableTemplate} />
-          <Route path="/ModeratorPage" component={ModeratorPage} />
+          <Route path="/ModeratorPage" component={TableTemplate} />
+          <Route path="/AnalystPage" component={ModeratorPage} />
         </div>
       </div>
     </Router>
