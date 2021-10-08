@@ -6,7 +6,7 @@ on:
       - main
       - HerokuHotfix
       - HerokuHotfix2
-
+      - HerokuHotfix3
 jobs:
   build:
     runs-on: ubuntu-latest
