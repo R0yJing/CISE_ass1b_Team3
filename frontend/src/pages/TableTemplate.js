@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import Styles from "../components/tablestyle.js";
-import Table from "../components/evidencetable.js";
 import axios from "axios";
 import Dropdown from "../components/Dropdown.js";
 import env from "../env";
@@ -8,12 +6,25 @@ import SEPractices from "../dummydata/SEPractices";
 import SEPractice from "./SE-Practice";
 
 /*
-  *the purpose of TableTemplate is to act as a default template to build pages with tables.
-  *the table can be modified into a queue by sorting the table at runtime (so it becomes a FIFO queue)
-  *after retrieve the date information from the backend MongoDB
+  the purpose of TableTemplate is to act as a default template to build pages with tables.
+  the table can be modified into a queue by sorting the table at runtime (so it becomes a FIFO queue)
+  after retrieve the date information from the backend MongoDB.
+  By default this page acts as the analyst page
 */
 
 class TableTemplate extends Component {
+  constructor(){
+    super();
+    window.onbeforeunload = (event) => {
+      const e = event || window.event;
+      // Cancel the event
+      e.preventDefault();
+      if (e) {
+        e.returnValue = ""; // Legacy method for cross browser support
+      }
+      return ""; // Legacy method for cross browser support
+    };
+  }
   state = {
     checkedRole: false,
     lvlEvidenceDropdownItems: [
@@ -26,7 +37,6 @@ class TableTemplate extends Component {
     role: "",
     checkboxUnchecked: ["Claim", "Evidence"],
     data: [],
-    deletedItems: [],
     currentDeletedIdx: [],
     columnsAnalyst: [
       {
@@ -79,11 +89,14 @@ class TableTemplate extends Component {
         Cell: (row) => {
           return (
             <input
-              defaultValue={"Type claimed benefit"}
+              placeholder={"Type claimed benefit"}
+              onBlur={(e)=>{this.state.data[row.row.id]["claim"] =e.target.value;
+                            this.setState({data:this.state.data})}}
+              onFocus={(e)=>{e.target.placeholder="";}}
               onKeyDown={(e) =>{
                 if (e.key==='Enter'){
                   this.state.data[row.row.id]["claim"] = e.target.value;
-                  
+                  this.setState({data:this.state.data});
                 }
               }}
             />
@@ -100,7 +113,6 @@ class TableTemplate extends Component {
               optionItems={this.state.lvlEvidenceDropdownItems}
               title={"Select Level of Evidence"}
               handleChange={(e) => {
-          
                 this.state.data[row.row.id]["evidence"] = e.target.value
               }}
             />
@@ -118,6 +130,7 @@ class TableTemplate extends Component {
 
   removeFromArray(idx, arr) {
     arr.splice(idx, 1);
+
   }
   unclearRows(idx) {
     console.log("unclearRows called");
@@ -126,28 +139,29 @@ class TableTemplate extends Component {
   
   getFields(idx) {
     alert("called getFields");
-    if (this.props.role !== undefined){
-     
-        return [ {"evidence" : this.state.data[idx]["evidence"],
-                  "claim" : this.state.data[idx]["claim"]}]
-                            
+    if (this.props.role === undefined){
+        alert("updating for analyst")
+        console.log(this.state.data[idx]);
+
+        return {  analysed : true,
+                  evidence : this.state.data[idx]["evidence"],
+                  claim : this.state.data[idx]["claim"]}
 
     }
-    else return { analysed: true };
+    else return { moderated: true };
   }
 
   componentDidMount() {
     if (!this.state.checkedRole) {
-      this.state.checkedRole = true;
+      
+      this.setState({checkedRole:true});
+      //is moderator
       if (this.props.role !== undefined) {
         this.state.role = this.props.role + "/";
+        this.customiseColsForModerator();
         
       } else {
-    
-        this.state.columnsAnalyst.splice(0, 1);
-        this.modifyColumns();
-        this.setState({
-          columnsAnalyst:this.state.columnsAnalyst});
+        
         document.getElementById("deleteBtn").style.visibility = "hidden";
       }
     }
@@ -158,7 +172,10 @@ class TableTemplate extends Component {
       axios
         .get(env.url)
         .then((res) => {
+        
           tempData = res.data;
+          tempData.sort((artA, artB) => artA["date"] > artB["date"]);
+          
           this.setState({data:tempData.filter(elem => elem["moderated"] && !elem["analysed"] )})
         })
         .catch((err) => console.log("something bad happend"));
@@ -168,11 +185,14 @@ class TableTemplate extends Component {
       this.receiveDataModerator();
     }
   }
-  modifyColumns(){
+  
+ customiseColsForModerator(){
+   alert("moderator");
     this.state.columnsAnalyst = this.state.columnsAnalyst.slice(
       0,
       this.state.columnsAnalyst.length - 2
     );
+    //remove the dropdown and input entry used for the analyst only
     this.state.columnsAnalyst.push({
       Header:"Claimed Benefit",
       accessor:"claim"}
@@ -209,10 +229,10 @@ class TableTemplate extends Component {
         axios
           .delete(env.url + "/" + this.state.data[idx]["_id"])
           .then((res) => {
-            let temp = this.state.data;
+         
             this.removeFromArray(idx, this.state.data);
             alert("article successfully discarded");
-            this.setState({ data: temp });
+            this.setState({ data: this.state.data });
           })
           .catch((err) => console.log("something bad happened!"))
       );
@@ -235,6 +255,10 @@ class TableTemplate extends Component {
 
     this.state.currentDeletedIdx.forEach((idx) => {
       let fieldsToUpdate = this.getFields(idx);
+      console.log(fieldsToUpdate.analysed);
+      console.log(fieldsToUpdate.claim);
+            console.log(fieldsToUpdate.evidence);
+
       axios
         .put(
           env.url + "/" + this.state.role + dataRef[idx]["_id"],
@@ -285,6 +309,7 @@ class TableTemplate extends Component {
           <button onClick={(e) => this.update(e)}>
             Submit all checked items to SEPER
           </button>
+          {"  "}
           <button id={"deleteBtn"} onClick={(e) => this.discard(e)}> Discard this item </button>
         </span>
       </div>

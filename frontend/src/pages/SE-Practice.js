@@ -68,8 +68,12 @@ class SEPractice extends Component {
       
       axios.get(env.url).then(res => {
         console.log(res.data);
-        this.state.allArticles = res.data.filter(item => item["moderated"] === true && item["analysed"] === true)
-        this.setState({allArticles : this.state.allArticles})//.filter(item => item["moderated"] && item["analysed"])});
+         
+        this.setState({
+          allArticles: res.data.filter(
+            (item) => item["moderated"] && item["analysed"]
+          ),
+        });
         console.log(this.state.allArticles);
       
         console.warn("got all arts");

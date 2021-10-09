@@ -4,7 +4,18 @@ import {Component} from "react";
 import axios from "axios";
 
 class SubmitArticle extends Component{
-  
+  constructor(){
+    super();
+    window.onbeforeunload = (event) => {
+      const e = event || window.event;
+      // Cancel the event
+      e.preventDefault();
+      if (e) {
+        e.returnValue = ""; // Legacy method for cross browser support
+      }
+      return ""; // Legacy method for cross browser support
+    };
+  }
   render(){
     
     return (

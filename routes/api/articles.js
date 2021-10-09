@@ -29,29 +29,37 @@ router.put("/moderated/:id", async (req, res, next) =>
 );
 
 
-router.delete("/:id", async (req, res, next)=>{
-  Article.findOneAndRemove({_id : req.params.id}, (err, res)=>{
-    if (err)
+router.delete("/:id", async (req, res)=>{
+  Article.findOneAndRemove({_id : req.params.id}, {useFindAndModify: false}, (err, _)=>{
+    if (err){
       console.warn("failed to delete " + req.params.id);
-    else
+      res.sendStatus(409);
+    }
+    else{
+      
+      res.sendStatus(200);
       console.warn("discard successful");
+    }
   }
 );})
 
 
 router.put("/:id", async (req, res, next) =>{
-  console.log("updating!!!!!!!");
   console.log(req.body.id);
   console.log(req.params.id);
-  console.log("claim" + req.body["claim"]);
+  console.log(JSON.stringify(req.body));
+  console.log("claim" + req.body.claim);
+  console.log("lvl of evidence" + req.body.evidence)
+  var fieldsToUpdate = req.body;
 
-  var analysedQuery = {_id : req.params.id};
-  var newValue = {$set:{analysed : true, claim}}
-  Article.updateOne(analysedQuery, newValue, (err, res) =>{
+  var analystQuery = {_id : req.params.id};
+  var newValue = { $set: fieldsToUpdate };
+  Article.updateOne(analystQuery, newValue, (err, res) =>{
     if(err)
       console.log("something bad happed : failed to set to analysed");
     else
       console.log("success");
+
   });
 
 })
@@ -79,17 +87,6 @@ router.delete("/", async (req, res) => {
     .catch((error) => console.log(error));
 })
 //findOneAndDelete({ _id: id}) = findByIdAndDelete(id)
-router.delete("/:id", async (req, res) => {
- 
-  Article.remove({ id : req.body.id}, ( err) => {
-    if (err)
-      res.json({ msg: "unsucessful delete by title = " + req.params.title });
-    else res.json({ msg: "deleted " + title });
-
-  })
-  // Article.findOneAndDelete({title: req.params.title}, (err, art) =>{
-    
-});
 
 // router.delete("/", async (req, res) => {
 //   Article.remove({}, (err, art) => {
@@ -101,14 +98,27 @@ router.delete("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   console.log("posting new article");
-  Article.create(req.body)
-    .then((article) => {console.log("posted"); res.send("posted!")})
-    .catch((err) =>{      
-      res.status(400).json({ error: "Unable to add this article" });
-      console.log(err);
+  let article = req.body;
+  let exists = false;
+  Article.findOne({doi:article.doi}).then(article=>
+    {
+      console.log(JSON.stringify(article));
+      if (article===null || article.length===0){
+        console.log("null");
+        exists = true;
+      }
+     
     }
-    );
-  
+    ).catch(err=>{});
+  if (!exists){
+    Article.create(req.body)
+      .then((article) => res.send("success"))
+      .catch((err) =>{      
+        res.status(400).json({ error: "Unable to add this article" });
+        
+      }
+      );
+  } 
 });
 
 module.exports = router;

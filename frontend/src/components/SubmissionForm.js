@@ -1,16 +1,14 @@
 import React, {useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import {articles, setArticle} from "../dummydata/articles";
 import env from "../env";
 
 const SubmissionForm = () => {
   
   const { register, handleSubmit } = useForm();
-  const [result, setResult] = useState("");
   //use memo will be called on first page load,
-  //if you haven't left the page and entered it again,
-  //this won't be triggered
+  //if you haven't left the page and entered it again ,
+  //this won't be triggered on reload
   //purpose: get the number of articles in db
  
   let checkDOI = (string) => {

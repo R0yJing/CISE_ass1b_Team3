@@ -8,7 +8,6 @@ import {
 import Home from "./pages/Home";
 import SEPractice from "./pages/SE-Practice";
 import SubmitArticle from "./pages/Submit-Article";
-import NotFoundPage from "./pages/404";
 import TableTemplate from "./pages/TableTemplate";
 import ModeratorPage from "./pages/ModeratorPage";
 
@@ -30,20 +29,19 @@ const App = () => {
           <li>
             <NavLink to="/SubmitArticle">Submit an Article</NavLink>
           </li>
-
           <li>
-            <NavLink to="/AnalystPage"> Moderator Page</NavLink>
+            <NavLink to="/ModeratorPage">Moderator Page</NavLink>
           </li>
           <li>
-            <NavLink to="/ModeratorPage">Analyst Page</NavLink>
+            <NavLink to="/TableTemplate">Analyst Page</NavLink>
           </li>
         </ul>
         <div className="content">
           <Route exact path="/" component={Home} />
           <Route path="/SEPractice" component={SEPractice} />
           <Route path="/SubmitArticle" component={SubmitArticle} />
-          <Route path="/ModeratorPage" component={TableTemplate} />
-          <Route path="/AnalystPage" component={ModeratorPage} />
+          <Route path="/ModeratorPage" component={ModeratorPage} />
+          <Route path="/TableTemplate" component={TableTemplate} />
         </div>
       </div>
     </Router>
