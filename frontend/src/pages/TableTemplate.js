@@ -185,7 +185,7 @@ class TableTemplate extends Component {
   }
   
  customiseColsForModerator(){
-   alert("moderator");
+   
     this.state.columnsAnalyst = this.state.columnsAnalyst.slice(
       0,
       this.state.columnsAnalyst.length - 2
