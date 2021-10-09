@@ -7,7 +7,7 @@ class Home extends Component {
 
   render() {
     return (
-      <div styles={{FontFace}}>
+      <div>
         <h1> Welcome to the SEPER repository!</h1>
         <p> Please go to the Submitter An Article Page to view articles.
             Alternatively, if you are a Moderator or an Analyst, please 

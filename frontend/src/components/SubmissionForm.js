@@ -143,11 +143,10 @@ const SubmissionForm = () => {
       axios
         .post(env.url, articleData)
         .then((res) => {
-          alert("article posted");
+           alert("Article submitted!");
         })
         .catch((err) => {
-          console.log("Error submitting!");
-          console.log(err);
+          alert("Something bad happened, either due to article duplication in database or something else");
         });
       //posting to db
     

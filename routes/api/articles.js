@@ -100,16 +100,18 @@ router.post("/", async (req, res) => {
   console.log("posting new article");
   let article = req.body;
   let exists = false;
-  Article.findOne({doi:article.doi}).then(article=>
+  await Article.findOne({doi:article.doi}).then(article=>
     {
       console.log(JSON.stringify(article));
-      if (article===null || article.length===0){
-        console.log("null");
+      if (article){
         exists = true;
+        res.status(400).send("duplicate err")
       }
      
     }
     ).catch(err=>{});
+
+  console.log("creating");
   if (!exists){
     Article.create(req.body)
       .then((article) => res.send("success"))

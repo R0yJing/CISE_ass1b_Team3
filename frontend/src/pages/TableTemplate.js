@@ -138,9 +138,7 @@ class TableTemplate extends Component {
   }
   
   getFields(idx) {
-    alert("called getFields");
     if (this.props.role === undefined){
-        alert("updating for analyst")
         console.log(this.state.data[idx]);
 
         return {  analysed : true,
