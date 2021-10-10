@@ -5,23 +5,6 @@ const app = express();
 const articles = require("./routes/api/articles");
 const bodyParser = require("body-parser");
 
-var allowCrossDomain = function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json"
-  );
-  next();
-  // intercept OPTIONS method
-  if ("OPTIONS" == req.method) {
-    console.log("options req detected (preflight)");
-    res.send(200);
-  } else {
-    next();
-  }
-};
 require("dotenv").config();
 //maybe not
 require("./models/Article");
@@ -48,7 +31,7 @@ app.get("/", (req, res) => {
   res.json(app.stack);
 });
 //update books via app.use
-const PORT = 5555 || process.env.PORT;
+const PORT = (5555 || process.env.PORT);
 app.listen(PORT, () =>
   console.log(`Server up @ ${PORT} process env port = ${process.env.PORT}`)
 );
