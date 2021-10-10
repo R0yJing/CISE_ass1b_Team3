@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
   res.json(app.stack);
 });
 //update books via app.use
-const PORT = 5555 || process.env.PORT;
+const PORT = (5000 || process.env.PORT);
 app.listen(PORT, () =>
   console.log(`Server up @ ${PORT} process env port = ${process.env.PORT}`)
 );
