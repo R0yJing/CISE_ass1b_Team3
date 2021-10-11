@@ -185,7 +185,6 @@ class TableTemplate extends Component {
   }
   
  customiseColsForModerator(){
-   alert("moderator");
     this.state.columnsAnalyst = this.state.columnsAnalyst.slice(
       0,
       this.state.columnsAnalyst.length - 2
@@ -242,7 +241,7 @@ class TableTemplate extends Component {
     if (this.askForConfirm()) {
       let err = "";
       if (this.state.checkboxUnchecked.length !== 0) {
-        this.state.checkboxUnchecked.forEach((item) => (err += item + " "));
+        this.state.checkboxUnchecked.forEach((item) => (err += item + ", "));
         alert("Please check the following before you proceed\n" + err);
 
         return;
@@ -256,14 +255,18 @@ class TableTemplate extends Component {
       console.log(fieldsToUpdate.analysed);
       console.log(fieldsToUpdate.claim);
             console.log(fieldsToUpdate.evidence);
-
-      axios
-        .put(
-          env.url + "/" + this.state.role + dataRef[idx]["_id"],
-          fieldsToUpdate
-        )
-        .then((res) => window.alert("analyst submiisssion successul"))
-        .catch((err) => console.error("cannot update"));
+      if (dataRef[idx]["_id"] === null || dataRef[idx]["_id"]){
+        //this article cannot be submitted because its _id is not found
+        //alert("Internal error: id not found");
+        return;
+      }
+        axios
+          .put(
+            env.url + "/" + this.state.role + dataRef[idx]["_id"],
+            fieldsToUpdate
+          )
+          .then((res) => window.alert("analyst submiisssion successul"))
+          .catch((err) => console.error("cannot update"));
       //this.state.deletedItems.push(this.state.data[idx]["_id"]);
       this.removeFromArray(idx, dataRef);
     });
